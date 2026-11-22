@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import tempfile
+import traceback
 import types
 from pathlib import Path
 
@@ -74,6 +75,11 @@ def main():
                 exec(compile(code, f"{nb.name}[cellule {i}]", "exec"), contexte)
             except Exception:
                 print(f"❌ Échec dans {nb.name}, cellule {i}")
+                if os.environ.get("GITHUB_ACTIONS"):
+                    # Annotation GitHub : visible sur la page du run sans être connecté
+                    tb = traceback.format_exc()[-3500:]
+                    tb = tb.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+                    print(f"::error title={nb.name} cellule {i}::{tb}")
                 raise
 
     # Idempotence de l'ingestion Bronze : une 2e exécution ne doit rien ajouter
