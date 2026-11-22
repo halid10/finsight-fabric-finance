@@ -7,7 +7,7 @@
 ![Fabric](https://img.shields.io/badge/Microsoft%20Fabric-Lakehouse-0078D4)
 ![Power BI](https://img.shields.io/badge/Power%20BI-Direct%20Lake-F2C811)
 ![PySpark](https://img.shields.io/badge/PySpark-Delta-E25A1C)
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF)
+[![CI](https://github.com/halid10/finsight-fabric-finance/actions/workflows/ci.yml/badge.svg)](https://github.com/halid10/finsight-fabric-finance/actions/workflows/ci.yml)
 
 ---
 

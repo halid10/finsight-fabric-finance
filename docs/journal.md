@@ -24,3 +24,11 @@ Une entrée par session de travail : ce qui a été fait, décisions, problèmes
   (pas de Java sur le poste local : la 1re exécution réelle se fait dans GitHub Actions puis dans Fabric).
 - Décision : budget de nov.-déc. 2026 converti au dernier taux connu (pas de taux futurs).
 - Valeurs de référence : CA 2025 = 52,14 M€, EBITDA 2025 = 15,6 %, DSO au 31/10/2026 = 68 j.
+
+### Publication sur GitHub & première exécution réelle des notebooks
+
+- Dépôt publié : https://github.com/halid10/finsight-fabric-finance
+- 1re exécution CI des notebooks (PySpark 3.5 + Delta 3.2) : bug trouvé dans `nb_03` — la fonction `cles()`
+  joignait `dim_compte` sur les factures, qui n'ont pas de numéro de compte. Corrigé.
+- Les erreurs des notebooks remontent désormais en annotations GitHub (lisibles sans connexion).
+- CI verte : Bronze → Silver → Gold → 8 contrôles qualité OK, ingestion Bronze idempotente.
