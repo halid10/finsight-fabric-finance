@@ -30,6 +30,7 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
+from pyspark.sql.window import Window
 
 
 def dec(col: str, scale: int = 2):
@@ -158,11 +159,25 @@ ecrire(taux, "silver_taux_change")
 taux = spark.table("silver_taux_change")
 
 
+# Dernier taux connu par devise : utilisé pour les mois futurs (budget de nov.-déc. après l'arrêté)
+dernier_taux = (
+    taux.withColumn("_rang", F.row_number().over(Window.partitionBy("devise").orderBy(F.desc("annee_mois"))))
+    .filter("_rang = 1")
+    .select("devise", F.col("taux_moyen_eur").alias("_dernier_taux"))
+)
+
+
 def convertir(df: DataFrame, col_date: str, colonnes: list) -> DataFrame:
-    """Ajoute <col>_eur pour chaque colonne, au taux moyen du mois de col_date."""
+    """Ajoute <col>_eur pour chaque colonne, au taux moyen du mois de col_date
+    (à défaut : dernier taux connu de la devise)."""
     df = df.withColumn("_annee_mois", F.date_format(col_date, "yyyy-MM"))
     t = taux.select(F.col("annee_mois").alias("_annee_mois"), "devise", "taux_moyen_eur")
-    df = df.join(t, ["_annee_mois", "devise"], "left")
+    df = (
+        df.join(t, ["_annee_mois", "devise"], "left")
+        .join(dernier_taux, "devise", "left")
+        .withColumn("taux_moyen_eur", F.coalesce("taux_moyen_eur", "_dernier_taux"))
+        .drop("_dernier_taux")
+    )
     for c in colonnes:
         df = df.withColumn(f"{c}_eur", (F.col(c) * F.col("taux_moyen_eur")).cast("decimal(18,2)"))
     return df.drop("_annee_mois")
