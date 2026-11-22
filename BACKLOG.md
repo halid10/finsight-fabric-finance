@@ -19,7 +19,7 @@ Chaque tâche a un identifiant (`FS-xx`) à réutiliser dans les messages de com
 | FS-03 | Activer un essai Fabric (ou une capacité F2+) sur votre tenant | 🧑‍💻 | [ ] |
 | FS-04 | Créer le workspace `FinSight-DEV` et l'associer à la capacité | 🧑‍💻 | [ ] |
 | FS-05 | Créer le Lakehouse `lh_finsight` | 🧑‍💻 | [ ] |
-| FS-06 | Connecter le workspace à ce dépôt GitHub (Workspace settings → Git integration, dossier `fabric/`) | 🧑‍💻 | [ ] |
+| FS-06 | Connecter le workspace à ce dépôt GitHub (Paramètres → Intégration Git, dossier `fabric/workspace`) | 🧑‍💻 | [ ] |
 
 **Critères d'acceptation** : le workspace affiche le Lakehouse vide et le statut Git « Synced ».
 
@@ -31,7 +31,7 @@ Chaque tâche a un identifiant (`FS-xx`) à réutiliser dans les messages de com
 | FS-11 | Écrire les tests de cohérence (écritures équilibrées, factures ↔ GL) | 🤖 | [x] |
 | FS-12 | Charger `data/raw/` dans `Files/raw/` du Lakehouse (upload du dossier) | 🧑‍💻 | [ ] |
 | FS-13 | Notebook `nb_01_bronze_ingestion` (CSV → Delta, colonnes techniques, idempotence) | 🤖 | [x] |
-| FS-14 | Exécuter `nb_01` et vérifier les 10 tables `bronze_*` | 🧑‍💻 | [ ] |
+| FS-14 | Exécuter `nb_01` et vérifier les 11 tables `bronze_*` | 🧑‍💻 | [ ] |
 
 **Critères d'acceptation** : `bronze_ecritures_gl` contient autant de lignes que la somme des CSV mensuels ;
 relancer le notebook ne crée aucun doublon.
@@ -58,6 +58,7 @@ relancer le notebook ne crée aucun doublon.
 | FS-33 | `fact_ar` : jours de retard, tranches de balance âgée | 🤖 | [x] |
 | FS-34 | Notebook `nb_04_data_quality` : 8 contrôles + table `dq_resultats` | 🤖 | [x] |
 | FS-35 | Exécuter `nb_03` + `nb_04` ; tous les contrôles doivent être `OK` | 🧑‍💻 | [ ] |
+| FS-37 | Valeurs de référence des KPI calculées depuis les CSV (`tests/valeurs_reference.py`) | 🤖 | [x] |
 | FS-36 | Interroger le SQL analytics endpoint avec `fabric/sql/controles_gold.sql` | 🧑‍💻 | [ ] |
 
 **Critères d'acceptation** : la somme du GL en Gold = somme Silver (écart 0,00) ; chaque fait a ses clés de dimension.
@@ -99,7 +100,7 @@ correspondent à `docs/05-dictionnaire-kpi.md`.
 |---|---|---|---|
 | FS-60 | Définition du pipeline `pl_finsight_daily` | 🤖 | [x] |
 | FS-61 | Créer le pipeline dans Fabric, le planifier à 06:00, alerte e-mail en échec | 🧑‍💻 | [ ] |
-| FS-62 | CI GitHub Actions (lint + génération + tests) | 🤖 | [x] |
+| FS-62 | CI GitHub Actions (lint + génération + tests + exécution PySpark des notebooks) | 🤖 | [x] |
 | FS-63 | Créer les workspaces TEST et PROD + pipeline de déploiement | 🧑‍💻 | [ ] |
 | FS-64 | Règles de déploiement (Lakehouse par environnement) | 🧑‍💻 | [ ] |
 | FS-65 | Certifier le modèle sémantique, appliquer une étiquette de confidentialité | 🧑‍💻 | [ ] |
@@ -112,4 +113,5 @@ correspondent à `docs/05-dictionnaire-kpi.md`.
 - FS-71 Éliminations intercompagnies (refacturations NOV-MA → autres filiales)
 - FS-72 Prévision de trésorerie (notebook ML / régression)
 - FS-73 Data Activator : alerte si DSO > 60 jours
+- FS-75 Trésorerie convertie au taux de clôture (actuellement taux moyen des mouvements)
 - FS-74 Paramétrage des notebooks par environnement (variables library)

@@ -1,0 +1,48 @@
+{
+  "name": "pl_finsight_daily",
+  "properties": {
+    "activities": [
+      {
+        "name": "Bronze",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": { "timeout": "0.00:30:00", "retry": 1, "retryIntervalInSeconds": 60 },
+        "typeProperties": {
+          "notebookId": "<NOTEBOOK_ID_NB_01>",
+          "workspaceId": "<WORKSPACE_ID>",
+          "parameters": {
+            "batch_id": { "value": { "value": "@pipeline().RunId", "type": "Expression" }, "type": "string" }
+          }
+        }
+      },
+      {
+        "name": "Silver",
+        "type": "TridentNotebook",
+        "dependsOn": [{ "activity": "Bronze", "dependencyConditions": ["Succeeded"] }],
+        "policy": { "timeout": "0.00:30:00", "retry": 1, "retryIntervalInSeconds": 60 },
+        "typeProperties": { "notebookId": "<NOTEBOOK_ID_NB_02>", "workspaceId": "<WORKSPACE_ID>" }
+      },
+      {
+        "name": "Gold",
+        "type": "TridentNotebook",
+        "dependsOn": [{ "activity": "Silver", "dependencyConditions": ["Succeeded"] }],
+        "policy": { "timeout": "0.00:30:00", "retry": 1, "retryIntervalInSeconds": 60 },
+        "typeProperties": { "notebookId": "<NOTEBOOK_ID_NB_03>", "workspaceId": "<WORKSPACE_ID>" }
+      },
+      {
+        "name": "Qualite",
+        "type": "TridentNotebook",
+        "dependsOn": [{ "activity": "Gold", "dependencyConditions": ["Succeeded"] }],
+        "policy": { "timeout": "0.00:15:00", "retry": 0 },
+        "typeProperties": { "notebookId": "<NOTEBOOK_ID_NB_04>", "workspaceId": "<WORKSPACE_ID>" }
+      },
+      {
+        "name": "Refresh modele",
+        "type": "PBISemanticModelRefresh",
+        "dependsOn": [{ "activity": "Qualite", "dependencyConditions": ["Succeeded"] }],
+        "policy": { "timeout": "0.00:15:00", "retry": 0 },
+        "typeProperties": { "groupId": "<WORKSPACE_ID>", "datasetId": "<SEMANTIC_MODEL_ID>", "method": "post" }
+      }
+    ]
+  }
+}
