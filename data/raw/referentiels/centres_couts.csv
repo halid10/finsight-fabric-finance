@@ -1,0 +1,9 @@
+code_cc;libelle_cc;departement;responsable
+VEN;Ventes;Commercial;Directeur commercial
+MKT;Marketing;Commercial;Responsable marketing
+OPS;Opérations / Delivery;Production;Directeur des opérations
+RD;Recherche & Développement;Production;Directeur technique
+FIN;Finance;Support;DAF
+RH;Ressources humaines;Support;DRH
+IT;Informatique interne;Support;DSI
+DIR;Direction générale;Support;Directeur général

@@ -1,0 +1,301 @@
+code_client;raison_sociale;pays;secteur;segment;delai_paiement_jours;code_entite
+CLI-00001;Helio Solutions SARL;France;Transport;PME;30;NOV-FR
+CLI-00002;Rivo Group SARL;France;Transport;PME;45;NOV-FR
+CLI-00003;Alto Holding SA;France;Énergie;ETI;45;NOV-FR
+CLI-00004;Cerya Systems SA;France;Énergie;Grand compte;60;NOV-FR
+CLI-00005;Delta Systems SA;France;Agroalimentaire;PME;45;NOV-FR
+CLI-00006;Helio Holding SAS;France;Distribution;ETI;30;NOV-FR
+CLI-00007;Fenix Logistics SAS;France;Santé;PME;30;NOV-FR
+CLI-00008;Fenix Energy SAS;France;Transport;PME;30;NOV-FR
+CLI-00009;Gala Finance SARL;France;Télécoms;PME;45;NOV-FR
+CLI-00010;Eko Group SARL;France;Santé;ETI;60;NOV-FR
+CLI-00011;Eko Health SAS;France;Banque;ETI;30;NOV-FR
+CLI-00012;Tessa Partners SAS;France;Télécoms;PME;60;NOV-FR
+CLI-00013;Vega Technologies SA;France;Transport;Grand compte;45;NOV-FR
+CLI-00014;Fenix Energy SA;France;Santé;PME;60;NOV-FR
+CLI-00015;Ulma Capital SARL;France;Distribution;ETI;30;NOV-FR
+CLI-00016;Delta Logistics SAS;France;Distribution;ETI;60;NOV-FR
+CLI-00017;Cerya Holding SARL;France;Industrie;PME;45;NOV-FR
+CLI-00018;Tessa Systems SA;France;Distribution;PME;45;NOV-FR
+CLI-00019;Quarto Energy SA;France;Assurance;ETI;45;NOV-FR
+CLI-00020;Alto Partners SARL;France;Distribution;ETI;30;NOV-FR
+CLI-00021;Gala Health SA;France;Agroalimentaire;PME;60;NOV-FR
+CLI-00022;Gala Partners SA;France;Énergie;Grand compte;45;NOV-FR
+CLI-00023;Bora Systems SARL;France;Assurance;ETI;30;NOV-FR
+CLI-00024;Fenix Capital SAS;France;Assurance;ETI;45;NOV-FR
+CLI-00025;Alto Partners SA;France;Télécoms;ETI;45;NOV-FR
+CLI-00026;Mira Industries SAS;France;Télécoms;ETI;45;NOV-FR
+CLI-00027;Eko Group SAS;France;Banque;ETI;60;NOV-FR
+CLI-00028;Bora Finance SAS;France;Transport;PME;30;NOV-FR
+CLI-00029;Cerya Finance SA;France;Distribution;ETI;45;NOV-FR
+CLI-00030;Tessa Industries SARL;France;Agroalimentaire;ETI;60;NOV-FR
+CLI-00031;Wendo Logistics SA;France;Industrie;Grand compte;45;NOV-FR
+CLI-00032;Rivo Group SARL;France;Énergie;ETI;30;NOV-FR
+CLI-00033;Rivo Technologies SAS;France;Transport;PME;30;NOV-FR
+CLI-00034;Delta Solutions SAS;France;Assurance;Grand compte;60;NOV-FR
+CLI-00035;Kora Group SARL;France;Santé;PME;60;NOV-FR
+CLI-00036;Iris Industries SA;France;Industrie;PME;45;NOV-FR
+CLI-00037;  Rivo Industries SA   ;France;Industrie;PME;60;NOV-FR
+CLI-00038;Nexo Solutions SA;France;Banque;PME;45;NOV-FR
+CLI-00039;Yuma Health SAS;France;Industrie;PME;30;NOV-FR
+CLI-00040;Nexo Holding SARL;France;Distribution;ETI;45;NOV-FR
+CLI-00041;Bora Services SAS;France;Télécoms;ETI;45;NOV-FR
+CLI-00042;Alto Retail SA;France;Santé;ETI;30;NOV-FR
+CLI-00043;Mira Retail SARL;France;Banque;PME;30;NOV-FR
+CLI-00044;Iris Industries SA;France;Énergie;PME;45;NOV-FR
+CLI-00045;  Bora Technologies SAS   ;France;Transport;ETI;30;NOV-FR
+CLI-00046;Delta Technologies SAS;France;Secteur public;PME;45;NOV-FR
+CLI-00047;Nexo Retail SAS;France;Industrie;PME;60;NOV-FR
+CLI-00048;Jade Capital SA;France;Agroalimentaire;PME;60;NOV-FR
+CLI-00049;Gala Health SAS;France;Industrie;ETI;30;NOV-FR
+CLI-00050;Cerya Services SA;France;Distribution;ETI;30;NOV-FR
+CLI-00051;Orba Systems SARL;France;Secteur public;ETI;45;NOV-FR
+CLI-00052;Yuma Services SA;France;Distribution;PME;30;NOV-FR
+CLI-00053;Rivo Group SA;France;Télécoms;ETI;60;NOV-FR
+CLI-00054;Orba Finance SARL;France;Secteur public;Grand compte;60;NOV-FR
+CLI-00055;Ulma Capital SARL;France;Distribution;PME;45;NOV-FR
+CLI-00056;Kora Logistics SARL;France;Industrie;ETI;30;NOV-FR
+CLI-00057;Nexo Systems SAS;France;Secteur public;PME;30;NOV-FR
+CLI-00058;Solea Technologies SA;France;Agroalimentaire;PME;45;NOV-FR
+CLI-00059;Mira Services SAS;France;Transport;Grand compte;60;NOV-FR
+CLI-00060;Pyra Industries SAS;France;Secteur public;ETI;30;NOV-FR
+CLI-00061;  Solea Finance SARL   ;France;Secteur public;ETI;30;NOV-FR
+CLI-00062;Kora Group SAS;France;Secteur public;PME;45;NOV-FR
+CLI-00063;Cerya Energy SA;France;Banque;ETI;45;NOV-FR
+CLI-00064;Tessa Solutions SA;France;Assurance;PME;60;NOV-FR
+CLI-00065;Lumen Solutions SARL;France;Assurance;ETI;30;NOV-FR
+CLI-00066;Mira Systems SARL;France;Agroalimentaire;PME;30;NOV-FR
+CLI-00067;Solea Holding SA;France;Secteur public;ETI;45;NOV-FR
+CLI-00068;Nexo Logistics SARL;France;Télécoms;PME;30;NOV-FR
+CLI-00069;Rivo Holding SAS;France;Agroalimentaire;PME;45;NOV-FR
+CLI-00070;Yuma Energy SARL;France;Secteur public;PME;45;NOV-FR
+CLI-00071;Gala Logistics SAS;France;Agroalimentaire;ETI;45;NOV-FR
+CLI-00072;Helio Technologies SAS;France;Distribution;ETI;45;NOV-FR
+CLI-00073;Cerya Capital SA;France;Distribution;ETI;45;NOV-FR
+CLI-00074;Lumen Systems SARL;France;Énergie;PME;45;NOV-FR
+CLI-00075;Gala Logistics SA;France;Industrie;PME;30;NOV-FR
+CLI-00076;Yuma Health SARL;France;Assurance;ETI;30;NOV-FR
+CLI-00077;Wendo Health SA;France;Banque;PME;60;NOV-FR
+CLI-00078;Alto Finance SAS;France;Télécoms;ETI;45;NOV-FR
+CLI-00079;Mira Energy SA;France;Banque;ETI;30;NOV-FR
+CLI-00080;Helio Partners SARL;France;Agroalimentaire;ETI;60;NOV-FR
+CLI-00081;Orba Energy SAS;France;Secteur public;PME;45;NOV-FR
+CLI-00082;Cerya Solutions SA;France;Assurance;ETI;30;NOV-FR
+CLI-00083;Jade Industries SA;France;Santé;ETI;45;NOV-FR
+CLI-00084;Zephir Retail SARL;France;Distribution;PME;45;NOV-FR
+CLI-00085;  Iris Services SA   ;France;Industrie;PME;45;NOV-FR
+CLI-00086;Jade Technologies SAS;France;Transport;ETI;60;NOV-FR
+CLI-00087;Iris Industries SA;France;Agroalimentaire;ETI;60;NOV-FR
+CLI-00088;Ulma Energy SAS;France;Agroalimentaire;ETI;45;NOV-FR
+CLI-00089;Lumen Systems SAS;France;Assurance;ETI;30;NOV-FR
+CLI-00090;  Mira Services SARL   ;France;Assurance;ETI;45;NOV-FR
+CLI-00091;Quarto Logistics SARL;France;Télécoms;ETI;30;NOV-FR
+CLI-00092;Orba Technologies SAS;France;Agroalimentaire;Grand compte;30;NOV-FR
+CLI-00093;Delta Energy SA;France;Industrie;ETI;45;NOV-FR
+CLI-00094;Nexo Services SAS;France;Distribution;PME;45;NOV-FR
+CLI-00095;Quarto Technologies SA;France;Santé;PME;45;NOV-FR
+CLI-00096;Alto Capital SARL;France;Agroalimentaire;ETI;60;NOV-FR
+CLI-00097;Rivo Energy SAS;France;Transport;ETI;45;NOV-FR
+CLI-00098;Wendo Group SARL;France;Secteur public;PME;30;NOV-FR
+CLI-00099;Mira Systems SARL;France;Industrie;PME;45;NOV-FR
+CLI-00100;Orba Partners SARL;France;Banque;PME;30;NOV-FR
+CLI-00101;Pyra Holding SAS;France;Secteur public;ETI;30;NOV-FR
+CLI-00102;Wendo Holding SAS;France;Banque;PME;60;NOV-FR
+CLI-00103;Helio Technologies SA;France;Assurance;Grand compte;30;NOV-FR
+CLI-00104;Eko Group SARL;France;Industrie;PME;30;NOV-FR
+CLI-00105;Vega Group SAS;France;Industrie;ETI;30;NOV-FR
+CLI-00106;Alto Holding SAS;France;Transport;PME;30;NOV-FR
+CLI-00107;Jade Group SAS;France;Assurance;ETI;30;NOV-FR
+CLI-00108;Wendo Capital SA;France;Secteur public;PME;45;NOV-FR
+CLI-00109;Jade Holding SA;France;Énergie;Grand compte;30;NOV-FR
+CLI-00110;Xeno Holding SARL;France;Industrie;ETI;30;NOV-FR
+CLI-00111;Orba Industries SARL;France;Industrie;ETI;30;NOV-FR
+CLI-00112;Gala Solutions SARL;France;Énergie;PME;60;NOV-FR
+CLI-00113;Pyra Holding SAS;France;Énergie;PME;30;NOV-FR
+CLI-00114;Vega Systems SARL;France;Secteur public;PME;30;NOV-FR
+CLI-00115;Xeno Retail SAS;France;Énergie;PME;30;NOV-FR
+CLI-00116;Rivo Logistics SARL;France;Assurance;ETI;45;NOV-FR
+CLI-00117;Eko Industries SA;France;Télécoms;PME;30;NOV-FR
+CLI-00118;Xeno Technologies SARL;France;Industrie;PME;45;NOV-FR
+CLI-00119;Iris Industries SARL;France;Télécoms;Grand compte;45;NOV-FR
+CLI-00120;Ulma Logistics SA;France;Distribution;ETI;30;NOV-FR
+CLI-00121;Gala Retail SARL;France;Banque;ETI;30;NOV-FR
+CLI-00122;Solea Group SA;France;Transport;PME;30;NOV-FR
+CLI-00123;  Yuma Solutions SARL   ;France;Industrie;ETI;30;NOV-FR
+CLI-00124;Alto Solutions SA;France;Distribution;ETI;60;NOV-FR
+CLI-00125;Xeno Partners SAS;France;Énergie;ETI;60;NOV-FR
+CLI-00126;Tessa Industries SARL;France;Transport;ETI;45;NOV-FR
+CLI-00127;Vega Partners SAS;France;Télécoms;ETI;30;NOV-FR
+CLI-00128;Eko Capital SARL;France;Transport;PME;45;NOV-FR
+CLI-00129;Quarto Finance SAS;France;Assurance;ETI;60;NOV-FR
+CLI-00130;Helio Systems SAS;France;Secteur public;PME;45;NOV-FR
+CLI-00131;Iris Logistics SA;Belgique;Télécoms;PME;30;NOV-BE
+CLI-00132;Xeno Technologies SRL;Belgique;Transport;PME;30;NOV-BE
+CLI-00133;Delta Systems SRL;Belgique;Secteur public;ETI;30;NOV-BE
+CLI-00134;Solea Health SA;Belgique;Télécoms;ETI;30;NOV-BE
+CLI-00135;Delta Holding SRL;Belgique;Secteur public;PME;60;NOV-BE
+CLI-00136;Ulma Health SA;Belgique;Santé;Grand compte;30;NOV-BE
+CLI-00137;Kora Logistics SA;Belgique;Industrie;ETI;60;NOV-BE
+CLI-00138;Orba Logistics SA;Belgique;Énergie;ETI;60;NOV-BE
+CLI-00139;Yuma Finance SA;Belgique;Santé;ETI;45;NOV-BE
+CLI-00140;Iris Group SA;Belgique;Assurance;ETI;45;NOV-BE
+CLI-00141;Jade Industries SA;Belgique;Agroalimentaire;ETI;30;NOV-BE
+CLI-00142;Eko Holding SRL;Belgique;Assurance;PME;30;NOV-BE
+CLI-00143;Rivo Technologies SA;Belgique;Énergie;ETI;30;NOV-BE
+CLI-00144;Orba Partners SRL;Belgique;Agroalimentaire;ETI;45;NOV-BE
+CLI-00145;Alto Logistics SA;Belgique;Agroalimentaire;ETI;45;NOV-BE
+CLI-00146;Solea Systems SA;Belgique;Santé;ETI;45;NOV-BE
+CLI-00147;Ulma Partners SA;Belgique;Énergie;ETI;45;NOV-BE
+CLI-00148;Gala Solutions SA;Belgique;Assurance;PME;30;NOV-BE
+CLI-00149;Solea Holding SRL;Belgique;Agroalimentaire;ETI;60;NOV-BE
+CLI-00150;Orba Partners SRL;Belgique;Santé;Grand compte;45;NOV-BE
+CLI-00151;  Orba Energy SA   ;Belgique;Santé;PME;30;NOV-BE
+CLI-00152;Solea Health SA;Belgique;Agroalimentaire;ETI;30;NOV-BE
+CLI-00153;Bora Energy SA;Belgique;Énergie;ETI;30;NOV-BE
+CLI-00154;Orba Energy SA;Belgique;Santé;PME;45;NOV-BE
+CLI-00155;  Zephir Retail SRL   ;Belgique;Assurance;PME;60;NOV-BE
+CLI-00156;Vega Finance SA;Belgique;Agroalimentaire;PME;30;NOV-BE
+CLI-00157;Vega Systems SA;Belgique;Assurance;PME;45;NOV-BE
+CLI-00158;Eko Retail SA;Belgique;Secteur public;ETI;60;NOV-BE
+CLI-00159;Gala Logistics SRL;Belgique;Industrie;PME;30;NOV-BE
+CLI-00160;Eko Finance SRL;Belgique;Industrie;PME;60;NOV-BE
+CLI-00161;Nexo Logistics SA;Belgique;Agroalimentaire;PME;45;NOV-BE
+CLI-00162;Helio Capital SRL;Belgique;Distribution;ETI;45;NOV-BE
+CLI-00163;Yuma Capital SRL;Belgique;Secteur public;ETI;30;NOV-BE
+CLI-00164;Iris Industries SRL;Belgique;Transport;ETI;30;NOV-BE
+CLI-00165;Cerya Holding SA;Belgique;Transport;ETI;30;NOV-BE
+CLI-00166;Mira Health SRL;Belgique;Assurance;Grand compte;45;NOV-BE
+CLI-00167;Wendo Retail SRL;Belgique;Industrie;PME;30;NOV-BE
+CLI-00168;Eko Holding SRL;Belgique;Banque;Grand compte;30;NOV-BE
+CLI-00169;Xeno Finance SRL;Belgique;Santé;PME;30;NOV-BE
+CLI-00170;  Zephir Finance SRL   ;Belgique;Télécoms;PME;60;NOV-BE
+CLI-00171;Wendo Solutions SRL;Belgique;Agroalimentaire;ETI;45;NOV-BE
+CLI-00172;  Cerya Health SRL   ;Belgique;Transport;PME;60;NOV-BE
+CLI-00173;Ulma Systems SRL;Belgique;Banque;PME;45;NOV-BE
+CLI-00174;Ulma Partners SRL;Belgique;Énergie;PME;60;NOV-BE
+CLI-00175;Vega Energy SRL;Belgique;Industrie;Grand compte;30;NOV-BE
+CLI-00176;Bora Logistics SRL;Belgique;Transport;PME;45;NOV-BE
+CLI-00177;Lumen Services SA;Belgique;Énergie;ETI;45;NOV-BE
+CLI-00178;Xeno Energy SRL;Belgique;Industrie;PME;45;NOV-BE
+CLI-00179;Iris Holding SA;Belgique;Assurance;PME;45;NOV-BE
+CLI-00180;Kora Partners SA;Belgique;Santé;Grand compte;45;NOV-BE
+CLI-00181;  Orba Logistics plc   ;Royaume-Uni;Énergie;ETI;60;NOV-UK
+CLI-00182;Zephir Technologies Ltd;Royaume-Uni;Industrie;ETI;60;NOV-UK
+CLI-00183;Helio Holding plc;Royaume-Uni;Agroalimentaire;ETI;30;NOV-UK
+CLI-00184;Solea Solutions plc;Royaume-Uni;Santé;PME;30;NOV-UK
+CLI-00185;Delta Capital plc;Royaume-Uni;Distribution;ETI;60;NOV-UK
+CLI-00186;Delta Solutions Ltd;Royaume-Uni;Télécoms;Grand compte;30;NOV-UK
+CLI-00187;Rivo Health plc;Royaume-Uni;Industrie;Grand compte;30;NOV-UK
+CLI-00188;Gala Holding Ltd;Royaume-Uni;Télécoms;ETI;30;NOV-UK
+CLI-00189;  Rivo Solutions Ltd   ;Royaume-Uni;Secteur public;ETI;45;NOV-UK
+CLI-00190;Cerya Solutions plc;Royaume-Uni;Télécoms;Grand compte;45;NOV-UK
+CLI-00191;Yuma Health Ltd;Royaume-Uni;Industrie;PME;45;NOV-UK
+CLI-00192;Fenix Logistics Ltd;Royaume-Uni;Transport;ETI;45;NOV-UK
+CLI-00193;Rivo Capital Ltd;Royaume-Uni;Agroalimentaire;PME;60;NOV-UK
+CLI-00194;Solea Solutions Ltd;Royaume-Uni;Agroalimentaire;ETI;45;NOV-UK
+CLI-00195;Alto Partners Ltd;Royaume-Uni;Agroalimentaire;ETI;45;NOV-UK
+CLI-00196;Ulma Industries plc;Royaume-Uni;Transport;ETI;45;NOV-UK
+CLI-00197;Zephir Retail plc;Royaume-Uni;Assurance;PME;30;NOV-UK
+CLI-00198;Kora Finance Ltd;Royaume-Uni;Énergie;PME;45;NOV-UK
+CLI-00199;Rivo Partners plc;Royaume-Uni;Assurance;PME;45;NOV-UK
+CLI-00200;Quarto Energy plc;Royaume-Uni;Télécoms;PME;30;NOV-UK
+CLI-00201;  Helio Group plc   ;Royaume-Uni;Santé;PME;45;NOV-UK
+CLI-00202;Jade Health Ltd;Royaume-Uni;Secteur public;Grand compte;30;NOV-UK
+CLI-00203;  Lumen Industries plc   ;Royaume-Uni;Transport;Grand compte;30;NOV-UK
+CLI-00204;Orba Holding plc;Royaume-Uni;Agroalimentaire;PME;60;NOV-UK
+CLI-00205;Zephir Logistics plc;Royaume-Uni;Distribution;Grand compte;60;NOV-UK
+CLI-00206;Eko Technologies plc;Royaume-Uni;Transport;ETI;45;NOV-UK
+CLI-00207;Mira Finance plc;Royaume-Uni;Transport;Grand compte;60;NOV-UK
+CLI-00208;Alto Logistics plc;Royaume-Uni;Secteur public;ETI;60;NOV-UK
+CLI-00209;Iris Retail Ltd;Royaume-Uni;Agroalimentaire;ETI;45;NOV-UK
+CLI-00210;  Mira Solutions Ltd   ;Royaume-Uni;Assurance;ETI;30;NOV-UK
+CLI-00211;Wendo Group plc;Royaume-Uni;Agroalimentaire;PME;45;NOV-UK
+CLI-00212;Eko Health Ltd;Royaume-Uni;Télécoms;ETI;60;NOV-UK
+CLI-00213;Rivo Logistics plc;Royaume-Uni;Santé;Grand compte;60;NOV-UK
+CLI-00214;Jade Group plc;Royaume-Uni;Distribution;Grand compte;45;NOV-UK
+CLI-00215;Delta Finance plc;Royaume-Uni;Secteur public;ETI;45;NOV-UK
+CLI-00216;Jade Technologies Ltd;Royaume-Uni;Télécoms;ETI;45;NOV-UK
+CLI-00217;Iris Solutions Ltd;Royaume-Uni;Agroalimentaire;PME;30;NOV-UK
+CLI-00218;Ulma Group Ltd;Royaume-Uni;Énergie;ETI;45;NOV-UK
+CLI-00219;Nexo Retail plc;Royaume-Uni;Distribution;Grand compte;45;NOV-UK
+CLI-00220;Cerya Retail Ltd;Royaume-Uni;Banque;Grand compte;30;NOV-UK
+CLI-00221;Xeno Services plc;Royaume-Uni;Banque;ETI;45;NOV-UK
+CLI-00222;Eko Services plc;Royaume-Uni;Assurance;ETI;45;NOV-UK
+CLI-00223;Fenix Industries plc;Royaume-Uni;Agroalimentaire;ETI;30;NOV-UK
+CLI-00224;Cerya Systems Ltd;Royaume-Uni;Industrie;Grand compte;45;NOV-UK
+CLI-00225;Helio Energy plc;Royaume-Uni;Santé;PME;60;NOV-UK
+CLI-00226;Delta Energy plc;Royaume-Uni;Transport;ETI;45;NOV-UK
+CLI-00227;Eko Energy Ltd;Royaume-Uni;Agroalimentaire;PME;45;NOV-UK
+CLI-00228;Rivo Holding Ltd;Royaume-Uni;Agroalimentaire;ETI;30;NOV-UK
+CLI-00229;Solea Partners Ltd;Royaume-Uni;Transport;ETI;30;NOV-UK
+CLI-00230;Quarto Energy Ltd;Royaume-Uni;Agroalimentaire;PME;45;NOV-UK
+CLI-00231;Orba Solutions plc;Royaume-Uni;Banque;ETI;60;NOV-UK
+CLI-00232;Mira Capital Ltd;Royaume-Uni;Agroalimentaire;Grand compte;30;NOV-UK
+CLI-00233;  Bora Partners plc   ;Royaume-Uni;Secteur public;PME;30;NOV-UK
+CLI-00234;Mira Energy plc;Royaume-Uni;Transport;ETI;30;NOV-UK
+CLI-00235;Rivo Systems Ltd;Royaume-Uni;Distribution;PME;30;NOV-UK
+CLI-00236;Xeno Health plc;Royaume-Uni;Distribution;Grand compte;30;NOV-UK
+CLI-00237;  Xeno Holding Ltd   ;Royaume-Uni;Secteur public;PME;60;NOV-UK
+CLI-00238;Bora Energy Ltd;Royaume-Uni;Banque;PME;45;NOV-UK
+CLI-00239;Yuma Industries Ltd;Royaume-Uni;Santé;ETI;30;NOV-UK
+CLI-00240;Tessa Holding plc;Royaume-Uni;Industrie;ETI;60;NOV-UK
+CLI-00241;Solea Technologies Ltd;Royaume-Uni;Secteur public;PME;60;NOV-UK
+CLI-00242;Kora Technologies plc;Royaume-Uni;Santé;Grand compte;45;NOV-UK
+CLI-00243;Helio Capital Ltd;Royaume-Uni;Banque;ETI;60;NOV-UK
+CLI-00244;Mira Group plc;Royaume-Uni;Assurance;PME;45;NOV-UK
+CLI-00245;Vega Finance Ltd;Royaume-Uni;Distribution;PME;60;NOV-UK
+CLI-00246;Kora Capital Ltd;Royaume-Uni;Distribution;ETI;30;NOV-UK
+CLI-00247;Mira Group plc;Royaume-Uni;Secteur public;Grand compte;45;NOV-UK
+CLI-00248;Quarto Energy plc;Royaume-Uni;Télécoms;PME;45;NOV-UK
+CLI-00249;Solea Services Ltd;Royaume-Uni;Banque;PME;45;NOV-UK
+CLI-00250;Jade Solutions Ltd;Royaume-Uni;Secteur public;ETI;60;NOV-UK
+CLI-00251;Vega Logistics SARL;Maroc;Télécoms;ETI;45;NOV-MA
+CLI-00252;Eko Technologies SARL;Maroc;Transport;ETI;30;NOV-MA
+CLI-00253;Eko Industries SA;Maroc;Énergie;ETI;30;NOV-MA
+CLI-00254;  Pyra Retail SARL   ;Maroc;Transport;ETI;60;NOV-MA
+CLI-00255;Quarto Services SARL;Maroc;Industrie;ETI;30;NOV-MA
+CLI-00256;Tessa Health SARL;Maroc;Santé;ETI;45;NOV-MA
+CLI-00257;Helio Technologies SA;Maroc;Assurance;Grand compte;30;NOV-MA
+CLI-00258;Bora Retail SA;Maroc;Assurance;PME;45;NOV-MA
+CLI-00259;Delta Health SA;Maroc;Agroalimentaire;ETI;45;NOV-MA
+CLI-00260;Vega Industries SA;Maroc;Énergie;PME;30;NOV-MA
+CLI-00261;Wendo Services SARL;Maroc;Santé;ETI;30;NOV-MA
+CLI-00262;Vega Health SARL;Maroc;Industrie;ETI;30;NOV-MA
+CLI-00263;Kora Finance SARL;Maroc;Énergie;PME;30;NOV-MA
+CLI-00264;Helio Logistics SARL;Maroc;Agroalimentaire;ETI;45;NOV-MA
+CLI-00265;Wendo Partners SA;Maroc;Secteur public;Grand compte;30;NOV-MA
+CLI-00266;Alto Capital SARL;Maroc;Santé;PME;30;NOV-MA
+CLI-00267;Rivo Health SARL;Maroc;Assurance;PME;45;NOV-MA
+CLI-00268;Mira Industries SARL;Maroc;Assurance;ETI;60;NOV-MA
+CLI-00269;Eko Capital SARL;Maroc;Industrie;PME;30;NOV-MA
+CLI-00270;Zephir Partners SARL;Maroc;Distribution;PME;45;NOV-MA
+CLI-00271;Jade Industries SARL;Maroc;Agroalimentaire;PME;45;NOV-MA
+CLI-00272;Ulma Finance SA;Maroc;Agroalimentaire;PME;30;NOV-MA
+CLI-00273;Kora Capital SARL;Maroc;Distribution;PME;45;NOV-MA
+CLI-00274;Delta Finance SA;Maroc;Transport;ETI;30;NOV-MA
+CLI-00275;Orba Technologies SA;Maroc;Santé;Grand compte;30;NOV-MA
+CLI-00276;Pyra Solutions SARL;Maroc;Industrie;ETI;45;NOV-MA
+CLI-00277;Quarto Services SARL;Maroc;Énergie;ETI;60;NOV-MA
+CLI-00278;Fenix Retail SA;Maroc;Secteur public;PME;45;NOV-MA
+CLI-00279;Iris Group SA;Maroc;Secteur public;ETI;45;NOV-MA
+CLI-00280;Lumen Industries SARL;Maroc;Secteur public;ETI;30;NOV-MA
+CLI-00281;Gala Health SARL;Maroc;Assurance;PME;45;NOV-MA
+CLI-00282;  Bora Holding SA   ;Maroc;Énergie;ETI;30;NOV-MA
+CLI-00283;Fenix Logistics SARL;Maroc;Distribution;PME;45;NOV-MA
+CLI-00284;Mira Industries SA;Maroc;Secteur public;PME;45;NOV-MA
+CLI-00285;Wendo Holding SA;Maroc;Transport;PME;30;NOV-MA
+CLI-00286;Vega Services SARL;Maroc;Énergie;PME;60;NOV-MA
+CLI-00287;Lumen Services SARL;Maroc;Santé;ETI;60;NOV-MA
+CLI-00288;Helio Capital SA;Maroc;Industrie;ETI;60;NOV-MA
+CLI-00289;Nexo Solutions SARL;Maroc;Industrie;ETI;60;NOV-MA
+CLI-00290;Orba Finance SA;Maroc;Banque;PME;45;NOV-MA
+CLI-00291;Vega Energy SARL;Maroc;Télécoms;ETI;45;NOV-MA
+CLI-00292;Helio Capital SA;Maroc;Transport;ETI;45;NOV-MA
+CLI-00293;Yuma Energy SA;Maroc;Santé;PME;60;NOV-MA
+CLI-00294;Bora Holding SARL;Maroc;Secteur public;PME;30;NOV-MA
+CLI-00295;Bora Energy SARL;Maroc;Assurance;ETI;45;NOV-MA
+CLI-00296;Wendo Logistics SARL;Maroc;Industrie;PME;30;NOV-MA
+CLI-00297;Rivo Capital SA;Maroc;Santé;Grand compte;45;NOV-MA
+CLI-00298;Vega Services SA;Maroc;Secteur public;Grand compte;30;NOV-MA
+CLI-00299;Eko Group SA;Maroc;Distribution;ETI;45;NOV-MA
+CLI-00300;  Nexo Systems SARL   ;Maroc;Assurance;ETI;45;NOV-MA

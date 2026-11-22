@@ -1,0 +1,32 @@
+numero_compte;libelle_compte;classe;nature
+101000;Capital social;1;PASSIF
+106000;Réserves;1;PASSIF
+164000;Emprunts auprès des établissements de crédit;1;PASSIF
+218300;Matériel de bureau et informatique;2;ACTIF
+281800;Amortissements des immobilisations corporelles;2;ACTIF
+401000;Fournisseurs;4;PASSIF
+411000;Clients;4;ACTIF
+421000;Personnel - rémunérations dues;4;PASSIF
+431000;Sécurité sociale et organismes sociaux;4;PASSIF
+444000;État - impôt sur les bénéfices;4;PASSIF
+445660;TVA déductible sur biens et services;4;ACTIF
+445710;TVA collectée;4;PASSIF
+512000;Banque;5;ACTIF
+604000;Achats de sous-traitance;6;CHARGE
+607000;Achats de licences et hébergement revendus;6;CHARGE
+606100;Fournitures non stockables;6;CHARGE
+613200;Locations immobilières;6;CHARGE
+615000;Entretien et maintenance;6;CHARGE
+622600;Honoraires;6;CHARGE
+623000;Publicité et marketing;6;CHARGE
+625100;Voyages et déplacements;6;CHARGE
+626000;Frais postaux et télécommunications;6;CHARGE
+651000;Redevances logiciels et SaaS;6;CHARGE
+641000;Rémunérations du personnel;6;CHARGE
+645000;Charges de sécurité sociale;6;CHARGE
+661100;Intérêts des emprunts;6;CHARGE
+681100;Dotations aux amortissements;6;CHARGE
+695000;Impôt sur les bénéfices;6;CHARGE
+706000;Prestations de services;7;PRODUIT
+706100;Abonnements SaaS;7;PRODUIT
+768000;Autres produits financiers;7;PRODUIT

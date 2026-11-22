@@ -1,0 +1,122 @@
+code_fournisseur;raison_sociale;pays;categorie;delai_paiement_jours;code_entite
+FRN-00001;Wendo Logistics SAS;France;Sous-traitance;45;NOV-FR
+FRN-00002;Kora Finance SA;France;Sous-traitance;60;NOV-FR
+FRN-00003;Cerya Technologies SAS;France;Sous-traitance;60;NOV-FR
+FRN-00004;Vega Technologies SAS;France;Sous-traitance;30;NOV-FR
+FRN-00005;Gala Systems SA;France;Immobilier;45;NOV-FR
+FRN-00006;Iris Logistics SAS;France;Immobilier;45;NOV-FR
+FRN-00007;Rivo Finance SA;France;Immobilier;60;NOV-FR
+FRN-00008;Pyra Holding SAS;France;Immobilier;60;NOV-FR
+FRN-00009;Yuma Industries SA;France;Immobilier;30;NOV-FR
+FRN-00010;Alto Partners SA;France;Éditeur logiciel;45;NOV-FR
+FRN-00011;Orba Industries SAS;France;Éditeur logiciel;30;NOV-FR
+FRN-00012;Wendo Solutions SARL;France;Éditeur logiciel;45;NOV-FR
+FRN-00013;Fenix Services SAS;France;Éditeur logiciel;30;NOV-FR
+FRN-00014;Ulma Logistics SAS;France;Éditeur logiciel;30;NOV-FR
+FRN-00015;Vega Retail SA;France;Conseil & audit;30;NOV-FR
+FRN-00016;Mira Retail SAS;France;Conseil & audit;60;NOV-FR
+FRN-00017;Wendo Holding SA;France;Conseil & audit;45;NOV-FR
+FRN-00018;Ulma Partners SARL;France;Conseil & audit;30;NOV-FR
+FRN-00019;Gala Energy SA;France;Agence marketing;30;NOV-FR
+FRN-00020;Solea Group SARL;France;Agence marketing;60;NOV-FR
+FRN-00021;Alto Industries SARL;France;Agence de voyage;45;NOV-FR
+FRN-00022;Delta Services SAS;France;Agence de voyage;60;NOV-FR
+FRN-00023;Eko Energy SA;France;Agence de voyage;30;NOV-FR
+FRN-00024;Mira Partners SARL;France;Agence de voyage;30;NOV-FR
+FRN-00025;Delta Logistics SAS;France;Agence de voyage;45;NOV-FR
+FRN-00026;Mira Holding SA;France;Opérateur télécom;60;NOV-FR
+FRN-00027;Vega Solutions SA;France;Opérateur télécom;60;NOV-FR
+FRN-00028;Solea Industries SARL;France;Opérateur télécom;60;NOV-FR
+FRN-00029;Orba Logistics SARL;France;Maintenance;30;NOV-FR
+FRN-00030;Ulma Technologies SA;France;Maintenance;45;NOV-FR
+FRN-00031;Tessa Retail SAS;France;Maintenance;30;NOV-FR
+FRN-00032;Delta Solutions SA;France;Fournitures;60;NOV-FR
+FRN-00033;Xeno Systems SAS;France;Fournitures;45;NOV-FR
+FRN-00034;Zephir Solutions SA;Belgique;Sous-traitance;45;NOV-BE
+FRN-00035;Ulma Partners SA;Belgique;Sous-traitance;60;NOV-BE
+FRN-00036;Tessa Finance SRL;Belgique;Sous-traitance;60;NOV-BE
+FRN-00037;Alto Services SRL;Belgique;Sous-traitance;30;NOV-BE
+FRN-00038;Xeno Systems SRL;Belgique;Immobilier;60;NOV-BE
+FRN-00039;Bora Holding SA;Belgique;Immobilier;45;NOV-BE
+FRN-00040;Mira Partners SA;Belgique;Immobilier;45;NOV-BE
+FRN-00041;Quarto Industries SRL;Belgique;Éditeur logiciel;45;NOV-BE
+FRN-00042;Eko Systems SRL;Belgique;Éditeur logiciel;45;NOV-BE
+FRN-00043;Yuma Energy SA;Belgique;Conseil & audit;30;NOV-BE
+FRN-00044;Solea Partners SA;Belgique;Conseil & audit;45;NOV-BE
+FRN-00045;Gala Industries SA;Belgique;Conseil & audit;45;NOV-BE
+FRN-00046;Ulma Technologies SRL;Belgique;Agence marketing;45;NOV-BE
+FRN-00047;Wendo Systems SA;Belgique;Agence marketing;60;NOV-BE
+FRN-00048;Rivo Health SA;Belgique;Agence marketing;45;NOV-BE
+FRN-00049;Cerya Capital SA;Belgique;Agence marketing;60;NOV-BE
+FRN-00050;Zephir Solutions SRL;Belgique;Agence de voyage;45;NOV-BE
+FRN-00051;Solea Retail SA;Belgique;Agence de voyage;45;NOV-BE
+FRN-00052;Wendo Systems SA;Belgique;Agence de voyage;30;NOV-BE
+FRN-00053;Cerya Systems SA;Belgique;Opérateur télécom;45;NOV-BE
+FRN-00054;Tessa Finance SA;Belgique;Opérateur télécom;45;NOV-BE
+FRN-00055;Vega Technologies SA;Belgique;Opérateur télécom;30;NOV-BE
+FRN-00056;Wendo Solutions SA;Belgique;Maintenance;30;NOV-BE
+FRN-00057;Pyra Logistics SRL;Belgique;Maintenance;30;NOV-BE
+FRN-00058;Eko Technologies SRL;Belgique;Fournitures;60;NOV-BE
+FRN-00059;Delta Holding SA;Belgique;Fournitures;45;NOV-BE
+FRN-00060;Zephir Systems SRL;Belgique;Fournitures;60;NOV-BE
+FRN-00061;Cerya Capital SA;Belgique;Fournitures;45;NOV-BE
+FRN-00062;Quarto Logistics Ltd;Royaume-Uni;Hébergement cloud;45;NOV-UK
+FRN-00063;Solea Solutions plc;Royaume-Uni;Hébergement cloud;30;NOV-UK
+FRN-00064;Iris Holding Ltd;Royaume-Uni;Hébergement cloud;60;NOV-UK
+FRN-00065;Vega Technologies Ltd;Royaume-Uni;Hébergement cloud;30;NOV-UK
+FRN-00066;Xeno Health Ltd;Royaume-Uni;Hébergement cloud;30;NOV-UK
+FRN-00067;Helio Industries plc;Royaume-Uni;Immobilier;45;NOV-UK
+FRN-00068;Mira Solutions Ltd;Royaume-Uni;Immobilier;30;NOV-UK
+FRN-00069;Helio Logistics Ltd;Royaume-Uni;Éditeur logiciel;45;NOV-UK
+FRN-00070;Xeno Logistics plc;Royaume-Uni;Éditeur logiciel;30;NOV-UK
+FRN-00071;Solea Logistics Ltd;Royaume-Uni;Éditeur logiciel;60;NOV-UK
+FRN-00072;Vega Industries Ltd;Royaume-Uni;Éditeur logiciel;30;NOV-UK
+FRN-00073;Zephir Health Ltd;Royaume-Uni;Éditeur logiciel;45;NOV-UK
+FRN-00074;Orba Services plc;Royaume-Uni;Conseil & audit;45;NOV-UK
+FRN-00075;Kora Partners plc;Royaume-Uni;Conseil & audit;30;NOV-UK
+FRN-00076;Gala Capital plc;Royaume-Uni;Agence marketing;60;NOV-UK
+FRN-00077;Tessa Group plc;Royaume-Uni;Agence marketing;45;NOV-UK
+FRN-00078;Solea Energy Ltd;Royaume-Uni;Agence marketing;60;NOV-UK
+FRN-00079;Rivo Holding Ltd;Royaume-Uni;Agence marketing;30;NOV-UK
+FRN-00080;Nexo Industries Ltd;Royaume-Uni;Agence de voyage;60;NOV-UK
+FRN-00081;Lumen Retail Ltd;Royaume-Uni;Agence de voyage;45;NOV-UK
+FRN-00082;Yuma Retail plc;Royaume-Uni;Opérateur télécom;60;NOV-UK
+FRN-00083;Xeno Capital Ltd;Royaume-Uni;Opérateur télécom;30;NOV-UK
+FRN-00084;Nexo Energy Ltd;Royaume-Uni;Maintenance;30;NOV-UK
+FRN-00085;Wendo Capital Ltd;Royaume-Uni;Maintenance;30;NOV-UK
+FRN-00086;Helio Services plc;Royaume-Uni;Maintenance;60;NOV-UK
+FRN-00087;Orba Technologies Ltd;Royaume-Uni;Fournitures;60;NOV-UK
+FRN-00088;Delta Health Ltd;Royaume-Uni;Fournitures;60;NOV-UK
+FRN-00089;Mira Partners Ltd;Royaume-Uni;Fournitures;45;NOV-UK
+FRN-00090;Vega Solutions Ltd;Royaume-Uni;Fournitures;45;NOV-UK
+FRN-00091;Kora Holding SARL;Maroc;Sous-traitance;60;NOV-MA
+FRN-00092;Xeno Logistics SARL;Maroc;Sous-traitance;45;NOV-MA
+FRN-00093;Iris Group SA;Maroc;Sous-traitance;30;NOV-MA
+FRN-00094;Eko Holding SA;Maroc;Sous-traitance;30;NOV-MA
+FRN-00095;Fenix Energy SARL;Maroc;Immobilier;45;NOV-MA
+FRN-00096;Nexo Partners SARL;Maroc;Immobilier;30;NOV-MA
+FRN-00097;Jade Energy SARL;Maroc;Éditeur logiciel;30;NOV-MA
+FRN-00098;Cerya Solutions SARL;Maroc;Éditeur logiciel;60;NOV-MA
+FRN-00099;Wendo Finance SA;Maroc;Éditeur logiciel;30;NOV-MA
+FRN-00100;Kora Solutions SA;Maroc;Éditeur logiciel;60;NOV-MA
+FRN-00101;Helio Logistics SARL;Maroc;Éditeur logiciel;60;NOV-MA
+FRN-00102;Vega Capital SARL;Maroc;Conseil & audit;30;NOV-MA
+FRN-00103;Alto Systems SARL;Maroc;Conseil & audit;60;NOV-MA
+FRN-00104;Delta Energy SA;Maroc;Agence marketing;30;NOV-MA
+FRN-00105;Delta Industries SA;Maroc;Agence marketing;30;NOV-MA
+FRN-00106;Eko Group SARL;Maroc;Agence marketing;45;NOV-MA
+FRN-00107;Solea Finance SARL;Maroc;Agence de voyage;30;NOV-MA
+FRN-00108;Alto Partners SA;Maroc;Agence de voyage;60;NOV-MA
+FRN-00109;Zephir Solutions SA;Maroc;Opérateur télécom;45;NOV-MA
+FRN-00110;Delta Industries SARL;Maroc;Opérateur télécom;30;NOV-MA
+FRN-00111;Fenix Finance SARL;Maroc;Opérateur télécom;60;NOV-MA
+FRN-00112;Mira Energy SA;Maroc;Opérateur télécom;45;NOV-MA
+FRN-00113;Vega Systems SA;Maroc;Opérateur télécom;45;NOV-MA
+FRN-00114;Fenix Capital SARL;Maroc;Maintenance;45;NOV-MA
+FRN-00115;Eko Industries SA;Maroc;Maintenance;60;NOV-MA
+FRN-00116;Jade Energy SARL;Maroc;Maintenance;60;NOV-MA
+FRN-00117;Bora Partners SARL;Maroc;Fournitures;45;NOV-MA
+FRN-00118;Eko Systems SA;Maroc;Fournitures;60;NOV-MA
+FRN-00119;Zephir Health SA;Maroc;Fournitures;60;NOV-MA
+FRN-00120;Zephir Health SA;Maroc;Fournitures;45;NOV-MA
+FRN-00121;Zephir Technologies SARL;Maroc;Fournitures;45;NOV-MA

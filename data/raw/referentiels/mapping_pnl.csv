@@ -1,0 +1,19 @@
+numero_compte;ligne_pnl;ordre_pnl;agregat
+706000;Chiffre d'affaires;10;Marge brute
+706100;Chiffre d'affaires;10;Marge brute
+604000;Coût des ventes;20;Marge brute
+607000;Coût des ventes;20;Marge brute
+606100;Charges externes;30;EBITDA
+613200;Charges externes;30;EBITDA
+615000;Charges externes;30;EBITDA
+622600;Charges externes;30;EBITDA
+623000;Charges externes;30;EBITDA
+625100;Charges externes;30;EBITDA
+626000;Charges externes;30;EBITDA
+651000;Charges externes;30;EBITDA
+641000;Charges de personnel;40;EBITDA
+645000;Charges de personnel;40;EBITDA
+681100;Dotations aux amortissements;50;Résultat d'exploitation
+661100;Résultat financier;60;Résultat avant impôt
+768000;Résultat financier;60;Résultat avant impôt
+695000;Impôt sur les sociétés;70;Résultat net
