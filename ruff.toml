@@ -1,0 +1,9 @@
+line-length = 125
+target-version = "py38"
+
+[lint]
+select = ["E", "F", "W"]
+
+[lint.per-file-ignores]
+# Notebooks Fabric : `spark`, `display`, `notebookutils` sont injectés par le runtime
+"fabric/**/notebook-content.py" = ["F821", "E402", "E501"]

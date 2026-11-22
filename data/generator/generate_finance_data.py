@@ -501,6 +501,13 @@ class Generateur:
                 # ---- Budget (établi en début d'année, un peu optimiste) ----
                 self._budget(p, y, m, idx)
 
+        # Le budget couvre l'année complète, y compris les mois postérieurs à l'extraction
+        ye, me = map(int, self.fin.split("-"))
+        for m in range(me + 1, 13):
+            idx = (ye - y0) * 12 + (m - m0)
+            for p in PROFILS:
+                self._budget(p, ye, m, idx)
+
     def _repartir(self, montant, nb):
         poids = [self.rnd.uniform(0.5, 1.5) for _ in range(nb)]
         s = sum(poids)
