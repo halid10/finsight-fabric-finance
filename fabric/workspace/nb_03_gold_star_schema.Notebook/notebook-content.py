@@ -160,7 +160,9 @@ def cles(df: DataFrame) -> DataFrame:
     ent = spark.table("dim_entite").select("entite_key", "code_entite")
     cpt = spark.table("dim_compte").select("compte_key", "numero_compte")
     cc = spark.table("dim_centre_cout").select("cc_key", "code_cc")
-    df = df.join(ent, "code_entite", "left").join(cpt, "numero_compte", "left")
+    df = df.join(ent, "code_entite", "left")
+    if "numero_compte" in df.columns:
+        df = df.join(cpt, "numero_compte", "left")
     if "code_cc" in df.columns:
         df = df.join(cc, "code_cc", "left")
     for k in ["entite_key", "compte_key", "cc_key"]:
