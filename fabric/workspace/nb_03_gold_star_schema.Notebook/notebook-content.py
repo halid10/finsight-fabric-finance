@@ -17,6 +17,7 @@
 # |---|---|
 # | `dim_date`, `dim_entite`, `dim_compte`, `dim_centre_cout`, `dim_client`, `dim_fournisseur` | `fact_gl`, `fact_budget`, `fact_factures_clients`, `fact_factures_fournisseurs`, `fact_taux_change` |
 #
+# - Toutes les tables sont écrites dans le schéma **`gold`** (le seul exposé au modèle sémantique).
 # - Clés de substitution entières (`*_key`), membre **-1 « Inconnu »** dans chaque dimension.
 # - Clé de date au format `yyyymmdd` (entier).
 # - Tables optimisées pour **Direct Lake** (V-Order + `OPTIMIZE`).
@@ -41,6 +42,7 @@ from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 spark.conf.set("spark.sql.parquet.vorder.enabled", "true")   # V-Order (lecture Direct Lake optimale)
+spark.sql("CREATE SCHEMA IF NOT EXISTS gold")
 
 
 def ecrire(df: DataFrame, table: str):
@@ -99,7 +101,7 @@ dim_date = (
             "annee_mois", "annee_mois_num", "jour", "jour_semaine_num", "jour_semaine",
             "est_jour_ouvre", "est_fin_de_mois", "est_avant_arrete")
 )
-ecrire(dim_date, "dim_date")
+ecrire(dim_date, "gold.dim_date")
 
 # METADATA ********************
 
@@ -116,11 +118,11 @@ ecrire(dim_date, "dim_date")
 
 INC = "Inconnu"
 
-ecrire(avec_cle(spark.table("silver_entites").drop("date_creation"), "entite_key", "code_entite",
-                {"code_entite": "N/A", "nom_entite": INC, "pays": INC, "devise": "EUR"}), "dim_entite")
+ecrire(avec_cle(spark.table("silver.entites").drop("date_creation"), "entite_key", "code_entite",
+                {"code_entite": "N/A", "nom_entite": INC, "pays": INC, "devise": "EUR"}), "gold.dim_entite")
 
 dim_compte = (
-    spark.table("silver_plan_comptable")
+    spark.table("silver.plan_comptable")
     .withColumn("est_compte_resultat", F.col("nature").isin("PRODUIT", "CHARGE"))
     .withColumn("compte_libelle", F.concat_ws(" - ", "numero_compte", "libelle_compte"))
     .withColumn("ligne_pnl", F.coalesce("ligne_pnl", F.lit("Bilan")))
@@ -129,18 +131,18 @@ dim_compte = (
 ecrire(avec_cle(dim_compte, "compte_key", "numero_compte",
                 {"numero_compte": "N/A", "libelle_compte": INC, "compte_libelle": INC, "classe": "?",
                  "nature": INC, "ligne_pnl": INC, "ordre_pnl": 999, "agregat": INC,
-                 "est_compte_resultat": False}), "dim_compte")
+                 "est_compte_resultat": False}), "gold.dim_compte")
 
-ecrire(avec_cle(spark.table("silver_centres_couts"), "cc_key", "code_cc",
-                {"code_cc": "N/A", "libelle_cc": INC, "departement": INC, "responsable": INC}), "dim_centre_cout")
+ecrire(avec_cle(spark.table("silver.centres_couts"), "cc_key", "code_cc",
+                {"code_cc": "N/A", "libelle_cc": INC, "departement": INC, "responsable": INC}), "gold.dim_centre_cout")
 
-ecrire(avec_cle(spark.table("silver_clients"), "client_key", "code_client",
+ecrire(avec_cle(spark.table("silver.clients"), "client_key", "code_client",
                 {"code_client": "N/A", "raison_sociale": INC, "pays": INC, "secteur": INC, "segment": INC,
-                 "delai_paiement_jours": 0, "code_entite": "N/A"}), "dim_client")
+                 "delai_paiement_jours": 0, "code_entite": "N/A"}), "gold.dim_client")
 
-ecrire(avec_cle(spark.table("silver_fournisseurs"), "fournisseur_key", "code_fournisseur",
+ecrire(avec_cle(spark.table("silver.fournisseurs"), "fournisseur_key", "code_fournisseur",
                 {"code_fournisseur": "N/A", "raison_sociale": INC, "pays": INC, "categorie": INC,
-                 "delai_paiement_jours": 0, "code_entite": "N/A"}), "dim_fournisseur")
+                 "delai_paiement_jours": 0, "code_entite": "N/A"}), "gold.dim_fournisseur")
 
 # METADATA ********************
 
@@ -157,9 +159,9 @@ ecrire(avec_cle(spark.table("silver_fournisseurs"), "fournisseur_key", "code_fou
 
 def cles(df: DataFrame) -> DataFrame:
     """Remplace les codes métier par les clés de substitution (left join + -1 si absent)."""
-    ent = spark.table("dim_entite").select("entite_key", "code_entite")
-    cpt = spark.table("dim_compte").select("compte_key", "numero_compte")
-    cc = spark.table("dim_centre_cout").select("cc_key", "code_cc")
+    ent = spark.table("gold.dim_entite").select("entite_key", "code_entite")
+    cpt = spark.table("gold.dim_compte").select("compte_key", "numero_compte")
+    cc = spark.table("gold.dim_centre_cout").select("cc_key", "code_cc")
     df = df.join(ent, "code_entite", "left")
     if "numero_compte" in df.columns:
         df = df.join(cpt, "numero_compte", "left")
@@ -171,7 +173,7 @@ def cles(df: DataFrame) -> DataFrame:
     return df
 
 
-fact_gl = cles(spark.table("silver_ecritures_gl")).select(
+fact_gl = cles(spark.table("silver.ecritures_gl")).select(
     date_key("date_comptable").alias("date_key"),
     "entite_key", "compte_key", "cc_key",
     "journal", "num_ecriture", "num_ligne", "libelle", "reference_piece", "devise",
@@ -181,15 +183,15 @@ fact_gl = cles(spark.table("silver_ecritures_gl")).select(
     "montant_eur",
     "montant_pnl_eur",
 )
-ecrire(fact_gl, "fact_gl")
+ecrire(fact_gl, "gold.fact_gl")
 
-fact_budget = cles(spark.table("silver_budget")).select(
+fact_budget = cles(spark.table("silver.budget")).select(
     date_key("date_mois").alias("date_key"),
     "entite_key", "compte_key", "cc_key", "devise",
     F.col("montant_budget_pnl").alias("budget_pnl_devise"),
     F.col("montant_budget_pnl_eur").alias("budget_pnl_eur"),
 )
-ecrire(fact_budget, "fact_budget")
+ecrire(fact_budget, "gold.fact_budget")
 
 # METADATA ********************
 
@@ -240,15 +242,15 @@ def fact_factures(table: str, col_tiers: str, dim_tiers: str, cle_tiers: str) ->
     )
 
 
-ecrire(fact_factures("silver_factures_clients", "code_client", "dim_client", "client_key"), "fact_factures_clients")
-ecrire(fact_factures("silver_factures_fournisseurs", "code_fournisseur", "dim_fournisseur", "fournisseur_key"),
-       "fact_factures_fournisseurs")
+ecrire(fact_factures("silver.factures_clients", "code_client", "gold.dim_client", "client_key"), "gold.fact_factures_clients")
+ecrire(fact_factures("silver.factures_fournisseurs", "code_fournisseur", "gold.dim_fournisseur", "fournisseur_key"),
+       "gold.fact_factures_fournisseurs")
 
 ecrire(
-    spark.table("silver_taux_change").select(
+    spark.table("silver.taux_change").select(
         date_key(F.to_date(F.concat("annee_mois", F.lit("-01")))).alias("date_key"),
         "devise", "taux_moyen_eur", "taux_cloture_eur"),
-    "fact_taux_change",
+    "gold.fact_taux_change",
 )
 
 # METADATA ********************
@@ -266,9 +268,9 @@ ecrire(
 
 display(spark.sql("""
     SELECT d.annee, c.ordre_pnl, c.ligne_pnl, ROUND(SUM(f.montant_pnl_eur) / 1e6, 2) AS montant_m_eur
-    FROM fact_gl f
-    JOIN dim_compte c ON f.compte_key = c.compte_key
-    JOIN dim_date d   ON f.date_key = d.date_key
+    FROM gold.fact_gl f
+    JOIN gold.dim_compte c ON f.compte_key = c.compte_key
+    JOIN gold.dim_date d   ON f.date_key = d.date_key
     WHERE c.est_compte_resultat
     GROUP BY d.annee, c.ordre_pnl, c.ligne_pnl
     ORDER BY d.annee, c.ordre_pnl

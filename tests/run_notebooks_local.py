@@ -83,11 +83,11 @@ def main():
                 raise
 
     # Idempotence de l'ingestion Bronze : une 2e exécution ne doit rien ajouter
-    avant = spark.table("bronze_ecritures_gl").count()
+    avant = spark.table("bronze.ecritures_gl").count()
     contexte = {"spark": spark, "notebookutils": notebookutils, "display": display}
     for code in cellules_code(NOTEBOOKS[0] / "notebook-content.py"):
         exec(code, contexte)
-    apres = spark.table("bronze_ecritures_gl").count()
+    apres = spark.table("bronze.ecritures_gl").count()
     assert avant == apres, f"Ingestion non idempotente : {avant} -> {apres}"
     print(f"\n✅ Chaîne complète exécutée, ingestion idempotente ({apres} lignes bronze GL)")
     spark.stop()

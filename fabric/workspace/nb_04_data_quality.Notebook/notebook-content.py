@@ -13,7 +13,7 @@
 
 # # nb_04 — Contrôles qualité & réconciliation
 #
-# Chaque contrôle écrit une ligne dans la table **`dq_resultats`** (historisée).
+# Chaque contrôle écrit une ligne dans la table **`gold.dq_resultats`** (historisée).
 # Si au moins un contrôle est `KO`, le notebook **lève une exception** → le pipeline échoue et alerte.
 #
 # | # | Contrôle | Pourquoi |
@@ -56,37 +56,37 @@ def scalaire(sql: str):
 # CELL ********************
 
 controle("01 GL : lignes Silver = clés distinctes Bronze",
-         scalaire("SELECT COUNT(DISTINCT num_ecriture, num_ligne) FROM bronze_ecritures_gl"),
-         scalaire("SELECT COUNT(*) FROM silver_ecritures_gl"))
+         scalaire("SELECT COUNT(DISTINCT num_ecriture, num_ligne) FROM bronze.ecritures_gl"),
+         scalaire("SELECT COUNT(*) FROM silver.ecritures_gl"))
 
 controle("02 GL : aucune clé dupliquée en Silver", 0,
-         scalaire("""SELECT COUNT(*) FROM (SELECT num_ecriture, num_ligne FROM silver_ecritures_gl
+         scalaire("""SELECT COUNT(*) FROM (SELECT num_ecriture, num_ligne FROM silver.ecritures_gl
                      GROUP BY 1, 2 HAVING COUNT(*) > 1)"""))
 
 controle("03 GL : écritures déséquilibrées", 0,
-         scalaire("""SELECT COUNT(*) FROM (SELECT num_ecriture FROM silver_ecritures_gl
+         scalaire("""SELECT COUNT(*) FROM (SELECT num_ecriture FROM silver.ecritures_gl
                      GROUP BY num_ecriture HAVING SUM(montant) <> 0)"""))
 
 controle("04 Σ montant_pnl_eur Gold = Silver",
-         scalaire("SELECT SUM(montant_pnl_eur) FROM silver_ecritures_gl"),
-         scalaire("SELECT SUM(montant_pnl_eur) FROM fact_gl"), tolerance=0.01)
+         scalaire("SELECT SUM(montant_pnl_eur) FROM silver.ecritures_gl"),
+         scalaire("SELECT SUM(montant_pnl_eur) FROM gold.fact_gl"), tolerance=0.01)
 
 controle("05 fact_gl : lignes avec une clé inconnue (-1)", 0,
-         scalaire("""SELECT COUNT(*) FROM fact_gl
+         scalaire("""SELECT COUNT(*) FROM gold.fact_gl
                      WHERE date_key = -1 OR entite_key = -1 OR compte_key = -1 OR (cc_key = -1 AND compte_key IN
-                     (SELECT compte_key FROM dim_compte WHERE est_compte_resultat))"""))
+                     (SELECT compte_key FROM gold.dim_compte WHERE est_compte_resultat))"""))
 
 controle("06 Lignes GL sans taux de change", 0,
-         scalaire("SELECT COUNT(*) FROM silver_ecritures_gl WHERE taux_moyen_eur IS NULL"))
+         scalaire("SELECT COUNT(*) FROM silver.ecritures_gl WHERE taux_moyen_eur IS NULL"))
 
 controle("07 CA GL (706, journal VT) = Σ HT factures clients",
-         scalaire("SELECT SUM(montant_ht) FROM silver_factures_clients"),
-         scalaire("""SELECT SUM(credit) FROM silver_ecritures_gl
+         scalaire("SELECT SUM(montant_ht) FROM silver.factures_clients"),
+         scalaire("""SELECT SUM(credit) FROM silver.ecritures_gl
                      WHERE journal = 'VT' AND numero_compte LIKE '706%'"""), tolerance=0.01)
 
 controle("08 Solde 411 = TTC des factures clients ouvertes",
-         scalaire("SELECT SUM(montant_ttc) FROM silver_factures_clients WHERE date_paiement IS NULL"),
-         scalaire("SELECT SUM(montant) FROM silver_ecritures_gl WHERE numero_compte = '411000'"), tolerance=0.01)
+         scalaire("SELECT SUM(montant_ttc) FROM silver.factures_clients WHERE date_paiement IS NULL"),
+         scalaire("SELECT SUM(montant) FROM silver.ecritures_gl WHERE numero_compte = '411000'"), tolerance=0.01)
 
 # METADATA ********************
 
@@ -102,12 +102,12 @@ controle("08 Solde 411 = TTC des factures clients ouvertes",
 # CELL ********************
 
 df = spark.createDataFrame(resultats, "run_ts timestamp, controle string, statut string, attendu string, obtenu string")
-df.write.format("delta").mode("append").saveAsTable("dq_resultats")
+df.write.format("delta").mode("append").saveAsTable("gold.dq_resultats")
 display(df)
 
 nb_ko = df.filter(F.col("statut") == "KO").count()
 if nb_ko:
-    raise Exception(f"{nb_ko} contrôle(s) qualité en échec — voir la table dq_resultats")
+    raise Exception(f"{nb_ko} contrôle(s) qualité en échec — voir la table gold.dq_resultats")
 print("Tous les contrôles qualité sont OK ✅")
 
 # METADATA ********************

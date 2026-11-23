@@ -13,18 +13,19 @@
 
 # # nb_01 — Ingestion Bronze
 #
-# **Rôle** : copier les fichiers CSV déposés dans `Files/raw/` vers des tables Delta `bronze_*`,
+# **Rôle** : copier les fichiers CSV déposés dans `Files/raw/` vers des tables Delta `bronze.*`,
 # **sans transformation métier** (toutes les colonnes restent en `string`).
 #
 # | Source | Table | Mode |
 # |---|---|---|
 # | `referentiels/*.csv` | `bronze_<nom>` | overwrite |
 # | `taux_change`, `budget`, `factures_*` | `bronze_<nom>` | overwrite |
-# | `gl/ecritures_gl_YYYYMM.csv` | `bronze_ecritures_gl` | **append incrémental** (seuls les nouveaux fichiers) |
+# | `gl/ecritures_gl_YYYYMM.csv` | `bronze.ecritures_gl` | **append incrémental** (seuls les nouveaux fichiers) |
 #
 # Colonnes techniques ajoutées : `_source_file`, `_ingestion_ts`, `_batch_id`.
 #
-# ⚠️ Prérequis : attacher le Lakehouse **lh_finsight** comme Lakehouse par défaut du notebook.
+# ⚠️ Prérequis : Lakehouse **lh_finsight** créé avec l'option *Lakehouse schemas* et attaché comme Lakehouse par défaut.
+# Les tables sont écrites dans le schéma **`bronze`** (créé s'il n'existe pas).
 
 # PARAMETERS CELL ********************
 
@@ -49,6 +50,9 @@ from pyspark.sql import functions as F
 
 batch_id = batch_id or datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S") + "-" + uuid.uuid4().hex[:6]
 print(f"Batch : {batch_id}")
+
+# Lakehouse avec schémas : chaque couche a son schéma (bronze / silver / gold)
+spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")
 
 
 def lire_csv(chemin: str) -> DataFrame:
@@ -94,16 +98,16 @@ def charger(chemin: str, table: str, mode: str = "overwrite") -> int:
 # CELL ********************
 
 sources_completes = {
-    "bronze_entites": "referentiels/entites.csv",
-    "bronze_plan_comptable": "referentiels/plan_comptable.csv",
-    "bronze_mapping_pnl": "referentiels/mapping_pnl.csv",
-    "bronze_centres_couts": "referentiels/centres_couts.csv",
-    "bronze_clients": "referentiels/clients.csv",
-    "bronze_fournisseurs": "referentiels/fournisseurs.csv",
-    "bronze_taux_change": "taux_change/*.csv",
-    "bronze_budget": "budget/*.csv",
-    "bronze_factures_clients": "factures_clients/*.csv",
-    "bronze_factures_fournisseurs": "factures_fournisseurs/*.csv",
+    "bronze.entites": "referentiels/entites.csv",
+    "bronze.plan_comptable": "referentiels/plan_comptable.csv",
+    "bronze.mapping_pnl": "referentiels/mapping_pnl.csv",
+    "bronze.centres_couts": "referentiels/centres_couts.csv",
+    "bronze.clients": "referentiels/clients.csv",
+    "bronze.fournisseurs": "referentiels/fournisseurs.csv",
+    "bronze.taux_change": "taux_change/*.csv",
+    "bronze.budget": "budget/*.csv",
+    "bronze.factures_clients": "factures_clients/*.csv",
+    "bronze.factures_fournisseurs": "factures_fournisseurs/*.csv",
 }
 
 for table, relatif in sources_completes.items():
@@ -121,11 +125,11 @@ for table, relatif in sources_completes.items():
 # ## 2. Grand livre — chargement incrémental par fichier mensuel
 #
 # On ne charge que les fichiers `ecritures_gl_*.csv` qui ne sont pas encore présents dans
-# `bronze_ecritures_gl` (colonne `_source_file`). Relancer le notebook est donc **idempotent**.
+# `bronze.ecritures_gl` (colonne `_source_file`). Relancer le notebook est donc **idempotent**.
 
 # CELL ********************
 
-table_gl = "bronze_ecritures_gl"
+table_gl = "bronze.ecritures_gl"
 fichiers = sorted(f.name for f in notebookutils.fs.ls(f"{raw_path}/gl") if f.name.endswith(".csv"))
 
 if spark.catalog.tableExists(table_gl):
@@ -155,7 +159,7 @@ if nouveaux:
 display(
     spark.sql("""
         SELECT _source_file, COUNT(*) AS nb_lignes, MAX(_ingestion_ts) AS derniere_ingestion
-        FROM bronze_ecritures_gl
+        FROM bronze.ecritures_gl
         GROUP BY _source_file
         ORDER BY _source_file DESC
     """)

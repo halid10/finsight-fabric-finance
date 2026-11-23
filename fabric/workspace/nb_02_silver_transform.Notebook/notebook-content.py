@@ -13,7 +13,7 @@
 
 # # nb_02 — Transformation Silver
 #
-# **Rôle** : produire des données **fiables et typées** à partir de Bronze.
+# **Rôle** : produire des données **fiables et typées** à partir de Bronze (schéma `bronze` → schéma `silver`).
 #
 # | Règle | Détail |
 # |---|---|
@@ -59,6 +59,8 @@ def ecrire(df: DataFrame, table: str):
 
 TECH = ["_source_file", "_ingestion_ts", "_batch_id"]
 
+spark.sql("CREATE SCHEMA IF NOT EXISTS silver")
+
 # METADATA ********************
 
 # META {
@@ -73,31 +75,31 @@ TECH = ["_source_file", "_ingestion_ts", "_batch_id"]
 # CELL ********************
 
 ecrire(
-    spark.table("bronze_entites").select(
+    spark.table("bronze.entites").select(
         code("code_entite").alias("code_entite"),
         F.trim("nom_entite").alias("nom_entite"),
         F.trim("pays").alias("pays"),
         code("devise").alias("devise"),
         F.to_date("date_creation").alias("date_creation"),
     ),
-    "silver_entites",
+    "silver.entites",
 )
 
-plan = spark.table("bronze_plan_comptable").select(
+plan = spark.table("bronze.plan_comptable").select(
     F.trim("numero_compte").alias("numero_compte"),
     F.trim("libelle_compte").alias("libelle_compte"),
     F.trim("classe").alias("classe"),
     code("nature").alias("nature"),
 )
-mapping = spark.table("bronze_mapping_pnl").select(
+mapping = spark.table("bronze.mapping_pnl").select(
     F.trim("numero_compte").alias("numero_compte"),
     F.trim("ligne_pnl").alias("ligne_pnl"),
     F.col("ordre_pnl").cast("int").alias("ordre_pnl"),
     F.trim("agregat").alias("agregat"),
 )
-ecrire(plan.join(mapping, "numero_compte", "left"), "silver_plan_comptable")
+ecrire(plan.join(mapping, "numero_compte", "left"), "silver.plan_comptable")
 
-centres = spark.table("bronze_centres_couts").select(
+centres = spark.table("bronze.centres_couts").select(
     code("code_cc").alias("code_cc"),
     F.trim("libelle_cc").alias("libelle_cc"),
     F.trim("departement").alias("departement"),
@@ -106,10 +108,10 @@ centres = spark.table("bronze_centres_couts").select(
 non_affecte = spark.createDataFrame(
     [("NON_AFFECTE", "Non affecté", "Non affecté", "À corriger")], centres.columns
 )
-ecrire(centres.unionByName(non_affecte), "silver_centres_couts")
+ecrire(centres.unionByName(non_affecte), "silver.centres_couts")
 
 ecrire(
-    spark.table("bronze_clients").select(
+    spark.table("bronze.clients").select(
         code("code_client").alias("code_client"),
         F.trim("raison_sociale").alias("raison_sociale"),
         F.trim("pays").alias("pays"),
@@ -118,11 +120,11 @@ ecrire(
         F.col("delai_paiement_jours").cast("int").alias("delai_paiement_jours"),
         code("code_entite").alias("code_entite"),
     ).dropDuplicates(["code_client"]),
-    "silver_clients",
+    "silver.clients",
 )
 
 ecrire(
-    spark.table("bronze_fournisseurs").select(
+    spark.table("bronze.fournisseurs").select(
         code("code_fournisseur").alias("code_fournisseur"),
         F.trim("raison_sociale").alias("raison_sociale"),
         F.trim("pays").alias("pays"),
@@ -130,7 +132,7 @@ ecrire(
         F.col("delai_paiement_jours").cast("int").alias("delai_paiement_jours"),
         code("code_entite").alias("code_entite"),
     ).dropDuplicates(["code_fournisseur"]),
-    "silver_fournisseurs",
+    "silver.fournisseurs",
 )
 
 # METADATA ********************
@@ -149,14 +151,14 @@ ecrire(
 
 # CELL ********************
 
-taux = spark.table("bronze_taux_change").select(
+taux = spark.table("bronze.taux_change").select(
     F.trim("annee_mois").alias("annee_mois"),
     code("devise").alias("devise"),
     dec("taux_moyen_eur", 6).alias("taux_moyen_eur"),
     dec("taux_cloture_eur", 6).alias("taux_cloture_eur"),
 )
-ecrire(taux, "silver_taux_change")
-taux = spark.table("silver_taux_change")
+ecrire(taux, "silver.taux_change")
+taux = spark.table("silver.taux_change")
 
 
 # Dernier taux connu par devise : utilisé pour les mois futurs (budget de nov.-déc. après l'arrêté)
@@ -195,10 +197,10 @@ def convertir(df: DataFrame, col_date: str, colonnes: list) -> DataFrame:
 
 # CELL ********************
 
-natures = spark.table("silver_plan_comptable").select("numero_compte", "nature")
+natures = spark.table("silver.plan_comptable").select("numero_compte", "nature")
 
 gl = (
-    spark.table("bronze_ecritures_gl")
+    spark.table("bronze.ecritures_gl")
     .dropDuplicates(["num_ecriture", "num_ligne"])               # doublons de l'export ERP
     .select(
         F.trim("num_ecriture").alias("num_ecriture"),
@@ -226,7 +228,7 @@ gl = (
     .withColumn("montant_pnl", (-F.col("montant")).cast("decimal(18,2)"))
 )
 gl = convertir(gl, "date_comptable", ["debit", "credit", "montant", "montant_pnl"])
-ecrire(gl, "silver_ecritures_gl")
+ecrire(gl, "silver.ecritures_gl")
 
 # METADATA ********************
 
@@ -245,7 +247,7 @@ ecrire(gl, "silver_ecritures_gl")
 # CELL ********************
 
 budget = (
-    spark.table("bronze_budget")
+    spark.table("bronze.budget")
     .select(
         code("code_entite").alias("code_entite"),
         F.trim("numero_compte").alias("numero_compte"),
@@ -261,7 +263,7 @@ budget = (
          .otherwise(F.col("montant_budget_saisi")).cast("decimal(18,2)"),
     )
 )
-ecrire(convertir(budget, "date_mois", ["montant_budget_pnl"]), "silver_budget")
+ecrire(convertir(budget, "date_mois", ["montant_budget_pnl"]), "silver.budget")
 
 # METADATA ********************
 
@@ -298,8 +300,8 @@ def factures(table_bronze: str, col_tiers: str) -> DataFrame:
     return convertir(df, "date_facture", ["montant_ht", "montant_ttc"])
 
 
-ecrire(factures("bronze_factures_clients", "code_client"), "silver_factures_clients")
-ecrire(factures("bronze_factures_fournisseurs", "code_fournisseur"), "silver_factures_fournisseurs")
+ecrire(factures("bronze.factures_clients", "code_client"), "silver.factures_clients")
+ecrire(factures("bronze.factures_fournisseurs", "code_fournisseur"), "silver.factures_fournisseurs")
 
 # METADATA ********************
 
@@ -314,9 +316,9 @@ ecrire(factures("bronze_factures_fournisseurs", "code_fournisseur"), "silver_fac
 
 # CELL ********************
 
-for b, s in [("bronze_ecritures_gl", "silver_ecritures_gl"),
-             ("bronze_factures_clients", "silver_factures_clients"),
-             ("bronze_factures_fournisseurs", "silver_factures_fournisseurs")]:
+for b, s in [("bronze.ecritures_gl", "silver.ecritures_gl"),
+             ("bronze.factures_clients", "silver.factures_clients"),
+             ("bronze.factures_fournisseurs", "silver.factures_fournisseurs")]:
     nb, ns = spark.table(b).count(), spark.table(s).count()
     print(f"{b:<30} {nb:>8}  →  {s:<30} {ns:>8}   (doublons supprimés : {nb - ns})")
 
