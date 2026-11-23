@@ -58,6 +58,6 @@ Règles de déploiement : le modèle sémantique de chaque environnement pointe 
 
 ## 5. Surveillance
 
-- Table `dq_resultats` : historique des contrôles qualité, à exposer dans une page « Santé des données » (optionnel).
+- Table `gold.dq_resultats` : historique des contrôles qualité, à exposer dans une page « Santé des données » (optionnel).
 - Pipeline : alerte e-mail (activité *Office 365 Outlook*) en cas d'échec.
 - *Monitoring hub* Fabric : durée des exécutions, consommation de la capacité (Fabric Capacity Metrics app).

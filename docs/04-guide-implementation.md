@@ -18,7 +18,9 @@ Chaque étape indique la tâche correspondante (`FS-xx`) : cochez-la dans le bac
 
 ### FS-05 · Créer le Lakehouse
 1. Dans le workspace : **+ Nouvel élément → Lakehouse** → nom `lh_finsight`.
-   *Ne cochez pas* « schémas de Lakehouse » (les notebooks utilisent le schéma par défaut `dbo`).
+   ✅ **Cochez « Lakehouse schemas »** (schémas de Lakehouse). Les notebooks créent eux-mêmes les schémas
+   `bronze`, `silver` et `gold` (`CREATE SCHEMA IF NOT EXISTS`) ; le schéma `dbo` par défaut reste vide.
+   ⚠️ L'option ne peut pas être activée après coup : si le Lakehouse existe déjà sans schémas, recréez-le.
 
 ### FS-06 · Connecter Git (GitHub)
 1. **Paramètres de l'espace de travail → Intégration Git → GitHub**.
@@ -43,7 +45,7 @@ Chaque étape indique la tâche correspondante (`FS-xx`) : cochez-la dans le bac
 
 ### FS-14 · Exécuter `nb_01_bronze_ingestion`
 1. Ouvrir le notebook → **Exécuter tout**.
-2. Résultat attendu : 11 tables `bronze_*` dans **Tables** (rafraîchir l'explorateur).
+2. Résultat attendu : dans **Tables**, un schéma `bronze` contenant 11 tables (rafraîchir l'explorateur).
 3. Relancer le notebook : le message doit indiquer « 0 à charger » pour le GL (idempotence).
 
 💡 *À comprendre* : pourquoi tout est en `string` en Bronze ? → pour ne jamais perdre une ligne à cause d'un format inattendu ;
@@ -56,15 +58,15 @@ le typage est la responsabilité de Silver.
 ### FS-24 · Exécuter `nb_02_silver_transform`
 1. **Exécuter tout**. La dernière cellule affiche le nombre de doublons supprimés.
 2. Attendu : environ **140 doublons** dans le GL et **6** dans les factures clients.
-3. Explorer `silver_ecritures_gl` : `code_cc = NON_AFFECTE` sur ~25 lignes, colonnes `*_eur` remplies.
+3. Explorer `silver.ecritures_gl` (schéma `silver`, 10 tables) : `code_cc = NON_AFFECTE` sur ~25 lignes, colonnes `*_eur` remplies.
 
 ---
 
 ## Sprint 3 — Gold & qualité
 
 ### FS-35 · Exécuter `nb_03` puis `nb_04`
-1. `nb_03_gold_star_schema` → 6 tables `dim_*` + 5 tables `fact_*`. La dernière cellule affiche le P&L annuel.
-2. `nb_04_data_quality` → 8 contrôles ✅. En cas de ❌, l'exception indique le contrôle fautif.
+1. `nb_03_gold_star_schema` → schéma `gold` : 6 tables `dim_*` + 5 tables `fact_*`. La dernière cellule affiche le P&L annuel.
+2. `nb_04_data_quality` → 8 contrôles ✅, historisés dans `gold.dq_resultats`. En cas de ❌, l'exception indique le contrôle fautif.
 
 ### FS-36 · SQL analytics endpoint
 1. En haut à droite du Lakehouse : basculer sur **SQL analytics endpoint**.
@@ -77,7 +79,7 @@ le typage est la responsabilité de Silver.
 
 ### FS-42 · Créer le modèle Direct Lake
 1. Dans le Lakehouse : **Nouveau modèle sémantique** → nom `sm_finsight`.
-2. Cocher uniquement les tables Gold : `dim_*` et `fact_*` → Confirmer.
+2. Déplier le schéma **`gold`** et cocher uniquement les tables `dim_*` et `fact_*` (pas `dq_resultats`, rien de `bronze`/`silver`) → Confirmer.
 
 ### FS-43 · Relations et table de dates
 1. Ouvrir le modèle (**Ouvrir le modèle de données**), passer en mode **Modification**.
@@ -133,7 +135,8 @@ Après chaque modification dans Fabric (notebook, etc.) : panneau **Contrôle de
 | Symptôme | Cause probable | Solution |
 |---|---|---|
 | `AnalysisException: Path does not exist: Files/raw/...` | Pas de Lakehouse par défaut, ou dossier mal nommé | Attacher `lh_finsight` au notebook, vérifier `Files/raw/gl` |
+| `[SCHEMA_NOT_FOUND]` ou `CREATE SCHEMA` refusé | Lakehouse créé sans l'option schémas | Recréer `lh_finsight` en cochant « Lakehouse schemas » |
 | `NameError: notebookutils` | Ancien runtime | Paramètres du workspace → Spark → Runtime **1.3** |
-| Colonnes `_eur` vides | Taux de change non chargés | Vérifier `bronze_taux_change`, relancer nb_02 |
+| Colonnes `_eur` vides | Taux de change non chargés | Vérifier `bronze.taux_change`, relancer nb_02 |
 | Visuels lents / « DirectQuery » dans l'analyseur de performances | Fallback Direct Lake | Vérifier qu'aucune table SQL view n'est utilisée ; réexécuter `OPTIMIZE` |
-| Mesure DAX en erreur après « Mettre à jour le modèle » | Nom de table/colonne différent | Comparer avec `dim_*`/`fact_*` du Lakehouse (sensible aux accents) |
+| Mesure DAX en erreur après « Mettre à jour le modèle » | Nom de table/colonne différent | Comparer avec `gold.dim_*` / `gold.fact_*` du Lakehouse (sensible aux accents) |

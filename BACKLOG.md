@@ -23,10 +23,11 @@ Chaque tâche a un identifiant historique `FS-xx` et sa clé Jira `KAN-xx` (à u
 | FS-02 | KAN-13 | Définir l'architecture médaillon et les conventions de nommage | 🤖 | [x] |
 | FS-03 | KAN-14 | Activer un essai Fabric (ou une capacité F2+) sur votre tenant | 🧑‍💻 | [ ] |
 | FS-04 | KAN-15 | Créer le workspace `FinSight-DEV` et l'associer à la capacité | 🧑‍💻 | [ ] |
-| FS-05 | KAN-16 | Créer le Lakehouse `lh_finsight` | 🧑‍💻 | [ ] |
+| FS-05 | KAN-16 | Créer le Lakehouse `lh_finsight` **avec l'option « Lakehouse schemas »** | 🧑‍💻 | [ ] |
 | FS-06 | KAN-17 | Connecter le workspace à ce dépôt GitHub (Paramètres → Intégration Git, dossier `fabric/workspace`) | 🧑‍💻 | [ ] |
+| FS-07 | KAN-66 | Ranger les tables dans 3 schémas Lakehouse `bronze` / `silver` / `gold` (notebooks, SQL, CI, docs) | 🤖 | [x] |
 
-**Critères d'acceptation** : le workspace affiche le Lakehouse vide et le statut Git « Synced ».
+**Critères d'acceptation** : le workspace affiche le Lakehouse (avec le schéma `dbo` par défaut) et le statut Git « Synced ». Les schémas `bronze`, `silver`, `gold` sont créés automatiquement par les notebooks.
 
 ## Sprint 1 — Données sources & Bronze
 
@@ -36,9 +37,9 @@ Chaque tâche a un identifiant historique `FS-xx` et sa clé Jira `KAN-xx` (à u
 | FS-11 | KAN-19 | Écrire les tests de cohérence (écritures équilibrées, factures ↔ GL) | 🤖 | [x] |
 | FS-12 | KAN-20 | Charger `data/raw/` dans `Files/raw/` du Lakehouse (upload du dossier) | 🧑‍💻 | [ ] |
 | FS-13 | KAN-21 | Notebook `nb_01_bronze_ingestion` (CSV → Delta, colonnes techniques, idempotence) | 🤖 | [x] |
-| FS-14 | KAN-22 | Exécuter `nb_01` et vérifier les 11 tables `bronze_*` | 🧑‍💻 | [ ] |
+| FS-14 | KAN-22 | Exécuter `nb_01` et vérifier les 11 tables du schéma `bronze` | 🧑‍💻 | [ ] |
 
-**Critères d'acceptation** : `bronze_ecritures_gl` contient autant de lignes que la somme des CSV mensuels ;
+**Critères d'acceptation** : `bronze.ecritures_gl` contient autant de lignes que la somme des CSV mensuels ;
 relancer le notebook ne crée aucun doublon.
 
 ## Sprint 2 — Silver
@@ -61,7 +62,7 @@ relancer le notebook ne crée aucun doublon.
 | FS-31 | KAN-29 | `dim_date` complète avec exercice fiscal, trimestre, flags | 🤖 | [x] |
 | FS-32 | KAN-30 | `dim_compte` avec hiérarchie du compte de résultat (lignes P&L, ordre, signe) | 🤖 | [x] |
 | FS-33 | KAN-31 | `fact_ar` : jours de retard, tranches de balance âgée | 🤖 | [x] |
-| FS-34 | KAN-32 | Notebook `nb_04_data_quality` : 8 contrôles + table `dq_resultats` | 🤖 | [x] |
+| FS-34 | KAN-32 | Notebook `nb_04_data_quality` : 8 contrôles + table `gold.dq_resultats` | 🤖 | [x] |
 | FS-35 | KAN-33 | Exécuter `nb_03` + `nb_04` ; tous les contrôles doivent être `OK` | 🧑‍💻 | [ ] |
 | FS-37 | KAN-35 | Valeurs de référence des KPI calculées depuis les CSV (`tests/valeurs_reference.py`) | 🤖 | [x] |
 | FS-36 | KAN-34 | Interroger le SQL analytics endpoint avec `fabric/sql/controles_gold.sql` | 🧑‍💻 | [ ] |

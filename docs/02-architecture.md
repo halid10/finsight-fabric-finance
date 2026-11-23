@@ -10,9 +10,9 @@ flowchart TB
         direction TB
         subgraph LH["Lakehouse : lh_finsight"]
             F["Files/raw/<br/>CSV déposés"]
-            BR["Tables bronze_*<br/>copie brute + métadonnées"]
-            SI["Tables silver_*<br/>typées, nettoyées, dédoublonnées"]
-            GO["Tables dim_* / fact_*<br/>schéma en étoile"]
+            BR["Schéma bronze<br/>copie brute + métadonnées"]
+            SI["Schéma silver<br/>typées, nettoyées, dédoublonnées"]
+            GO["Schéma gold<br/>dim_* / fact_* — schéma en étoile"]
             F --> BR --> SI --> GO
         end
         NB1[nb_01_bronze_ingestion] -.écrit.-> BR
@@ -30,6 +30,7 @@ flowchart TB
 
 | Décision | Choix | Pourquoi |
 |---|---|---|
+| Organisation | **Lakehouse avec schémas** `bronze` / `silver` / `gold` | Séparation claire des couches dans un seul Lakehouse, droits et lecture SQL par schéma, seul `gold` exposé au modèle |
 | Stockage | **Lakehouse** (pas Warehouse) | Transformations en PySpark, fichiers + tables dans un seul item, Direct Lake natif |
 | Format | **Delta Lake** (V-Order activé par défaut) | ACID, time travel, lecture Direct Lake optimale |
 | Transformation | **Notebooks PySpark** | Logique versionnée dans Git, testable, réutilisable |
@@ -47,9 +48,10 @@ flowchart TB
 | Notebook | `nb_<ordre>_<couche>_<rôle>` | `nb_02_silver_transform` |
 | Pipeline | `pl_<projet>_<fréquence>` | `pl_finsight_daily` |
 | Modèle sémantique | `sm_<projet>` | `sm_finsight` |
-| Tables Bronze | `bronze_<source>` | `bronze_ecritures_gl` |
-| Tables Silver | `silver_<entité>` | `silver_ecritures_gl` |
-| Tables Gold | `dim_<axe>` / `fact_<processus>` | `dim_compte`, `fact_gl` |
+| Schémas du Lakehouse | un par couche | `bronze`, `silver`, `gold` |
+| Tables Bronze | `bronze.<source>` | `bronze.ecritures_gl` |
+| Tables Silver | `silver.<entité>` | `silver.ecritures_gl` |
+| Tables Gold | `gold.dim_<axe>` / `gold.fact_<processus>` | `gold.dim_compte`, `gold.fact_gl` |
 | Colonnes | `snake_case`, français | `montant_eur`, `date_comptable` |
 | Mesures DAX | Libellé métier en français | `CA`, `EBITDA %`, `DSO (jours)` |
 

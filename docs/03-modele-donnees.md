@@ -12,23 +12,23 @@ flowchart LR
         r5[budget/budget_YYYY]
         r6[taux_change]
     end
-    subgraph BRONZE
-        b1[bronze_entites<br/>bronze_plan_comptable<br/>bronze_mapping_pnl<br/>bronze_centres_couts<br/>bronze_clients<br/>bronze_fournisseurs]
-        b2[bronze_ecritures_gl]
-        b3[bronze_factures_clients]
-        b4[bronze_factures_fournisseurs]
-        b5[bronze_budget]
-        b6[bronze_taux_change]
+    subgraph BRONZE["Schéma bronze"]
+        b1[bronze.entites<br/>bronze.plan_comptable<br/>bronze.mapping_pnl<br/>bronze.centres_couts<br/>bronze.clients<br/>bronze.fournisseurs]
+        b2[bronze.ecritures_gl]
+        b3[bronze.factures_clients]
+        b4[bronze.factures_fournisseurs]
+        b5[bronze.budget]
+        b6[bronze.taux_change]
     end
-    subgraph SILVER
-        s1[silver_entites<br/>silver_plan_comptable<br/>silver_centres_couts<br/>silver_clients<br/>silver_fournisseurs]
-        s2[silver_ecritures_gl]
-        s3[silver_factures_clients]
-        s4[silver_factures_fournisseurs]
-        s5[silver_budget]
-        s6[silver_taux_change]
+    subgraph SILVER["Schéma silver"]
+        s1[silver.entites<br/>silver.plan_comptable<br/>silver.centres_couts<br/>silver.clients<br/>silver.fournisseurs]
+        s2[silver.ecritures_gl]
+        s3[silver.factures_clients]
+        s4[silver.factures_fournisseurs]
+        s5[silver.budget]
+        s6[silver.taux_change]
     end
-    subgraph GOLD
+    subgraph GOLD["Schéma gold"]
         d[dim_date · dim_entite · dim_compte<br/>dim_centre_cout · dim_client · dim_fournisseur]
         f1[fact_gl]
         f2[fact_budget]
@@ -45,7 +45,10 @@ flowchart LR
     s6-.conversion EUR.->s2 & s3 & s4 & s5
 ```
 
-## 2. Tables Gold
+## 2. Tables Gold (schéma `gold`)
+
+Toutes les tables ci-dessous sont dans le schéma `gold` (ex. `gold.fact_gl`). Les schémas `bronze` et `silver`
+contiennent les mêmes sources sous leur nom métier (`bronze.ecritures_gl`, `silver.ecritures_gl`, …).
 
 ### Dimensions
 

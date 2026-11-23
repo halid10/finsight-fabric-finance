@@ -1,7 +1,8 @@
 # Spécification du modèle sémantique `sm_finsight`
 
 - **Mode de stockage** : Direct Lake sur le Lakehouse `lh_finsight`
-- **Tables** : uniquement les tables Gold (`dim_*`, `fact_*`) — ne pas inclure `bronze_*`, `silver_*`, `dq_resultats`.
+- **Tables** : uniquement les tables du schéma **`gold`** (`dim_*`, `fact_*`) — ne rien inclure des schémas `bronze` / `silver`, ni `gold.dq_resultats`.
+- Les noms de tables dans le modèle restent `dim_*` / `fact_*` (sans préfixe de schéma) : les mesures DAX n'ont pas à changer.
 
 ## 1. Tables à inclure
 

@@ -32,3 +32,10 @@ Une entrée par session de travail : ce qui a été fait, décisions, problèmes
   joignait `dim_compte` sur les factures, qui n'ont pas de numéro de compte. Corrigé.
 - Les erreurs des notebooks remontent désormais en annotations GitHub (lisibles sans connexion).
 - CI verte : Bronze → Silver → Gold → 8 contrôles qualité OK, ingestion Bronze idempotente.
+
+## 2026-11-23 — Schémas Lakehouse
+
+- Décision : un Lakehouse unique **avec schémas** — `bronze`, `silver`, `gold` — au lieu de préfixes dans les noms de tables.
+- Tables renommées : `bronze_x` → `bronze.x`, `silver_x` → `silver.x`, `dim_*`/`fact_*`/`dq_resultats` → `gold.*`.
+- Chaque notebook crée son schéma (`CREATE SCHEMA IF NOT EXISTS`). Le Lakehouse doit être créé avec l'option « Lakehouse schemas ».
+- Modèle sémantique : uniquement le schéma `gold` ; noms de tables et mesures DAX inchangés.
