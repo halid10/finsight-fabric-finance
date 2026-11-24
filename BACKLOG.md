@@ -74,11 +74,11 @@ relancer le notebook ne crée aucun doublon.
 | ID | Jira | Tâche | Type | Statut |
 |---|---|---|---|---|
 | FS-40 | KAN-36 | Spécifier le modèle (tables, relations, colonnes masquées) | 🤖 | [x] |
-| FS-41 | KAN-37 | Script TMDL : relations, groupe de calcul « Intelligence temporelle », 47 mesures (descriptions, dossiers, formats) | 🤖 | [x] |
+| FS-41 | KAN-37 | Définition du modèle (relations, groupe de calcul « Intelligence temporelle », 47 mesures documentées) : notebook `nb_05_semantic_model` + script TMDL | 🤖 | [x] |
 | FS-42 | KAN-38 | Créer le modèle sémantique Direct Lake `sm_finsight` depuis le Lakehouse | 🧑‍💻 | [ ] |
-| FS-43 | KAN-39 | Paramétrer le modèle : mesures implicites désactivées, table de dates, tris, colonnes masquées | 🧑‍💻 | [ ] |
-| FS-44 | KAN-40 | Exécuter le script TMDL `powerbi/semantic-model/sm_finsight.tmdl` dans la vue TMDL | 🧑‍💻 | [ ] |
-| FS-45 | KAN-41 | Valider le modèle avec `controle.dax` (valeurs de référence) | 🧑‍💻 | [ ] |
+| FS-43 | KAN-39 | Exécuter `nb_05_semantic_model` (paramétrage, relations, groupe de calcul, mesures) | 🧑‍💻 | [ ] |
+| FS-44 | KAN-40 | ~~Script TMDL dans la vue TMDL~~ → remplacé par `nb_05` (limite de la vue TMDL web) | 🧑‍💻 | [ ] |
+| FS-45 | KAN-41 | Vérifier le tableau de contrôle de `nb_05` (valeurs de référence) | 🧑‍💻 | [ ] |
 
 **Critères d'acceptation** : CA 2025 du modèle = CA 2025 calculé en SQL ; aucun fallback DirectQuery.
 

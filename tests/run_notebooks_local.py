@@ -24,7 +24,8 @@ from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession
 
 RACINE = Path(__file__).resolve().parents[1]
-NOTEBOOKS = sorted((RACINE / "fabric" / "workspace").glob("nb_*.Notebook"))
+# nb_01 à nb_04 (Spark). nb_05 pilote le modèle sémantique via le service Fabric : non exécutable en local.
+NOTEBOOKS = sorted((RACINE / "fabric" / "workspace").glob("nb_0[1-4]_*.Notebook"))
 MARQUEUR = re.compile(r"^# (CELL|PARAMETERS CELL|MARKDOWN|METADATA) \*+\s*$")
 
 

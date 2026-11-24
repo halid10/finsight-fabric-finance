@@ -23,7 +23,7 @@
 
 ## 2. Relations (toutes plusieurs-à-un, filtrage unidirectionnel)
 
-> Créées automatiquement par le script [`sm_finsight.tmdl`](sm_finsight.tmdl).
+> Créées automatiquement par le notebook `nb_05_semantic_model` (ou le script [`sm_finsight.tmdl`](sm_finsight.tmdl)).
 
 | De (plusieurs) | Vers (un) | Active |
 |---|---|---|
@@ -76,7 +76,9 @@ erDiagram
 
 ## 4. Mesures, descriptions, dossiers et formats
 
-Tout est défini dans [`generate_tmdl.py`](generate_tmdl.py) (source unique) qui produit [`sm_finsight.tmdl`](sm_finsight.tmdl).
+Tout est défini dans [`generate_tmdl.py`](generate_tmdl.py) (source unique) qui produit le notebook
+[`nb_05_semantic_model`](../../fabric/workspace/nb_05_semantic_model.Notebook/notebook-content.py) (application recommandée)
+et le script équivalent [`sm_finsight.tmdl`](sm_finsight.tmdl).
 Chaque mesure a une **description** (visible au survol dans le volet Données), un **dossier** et un **format**.
 Les mesures sont rangées dans leur table de faits (Direct Lake n'autorise pas de table de mesures calculée).
 

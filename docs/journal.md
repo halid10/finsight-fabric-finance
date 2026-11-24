@@ -51,3 +51,8 @@ Une entrée par session de travail : ce qui a été fait, décisions, problèmes
 - Non vérifié automatiquement : l'application du TMDL dans Fabric (pas de moteur Analysis Services en CI).
 - Correctif : la vue TMDL refuse les scripts à plusieurs commandes (« Applying a script with multiple commands is not supported »).
   Le script est désormais un **seul `createOrReplace`** (relations + mesures + groupe de calcul, même transaction).
+- 2e erreur identique avec un seul `createOrReplace` : la vue TMDL **web** n'accepte qu'un objet par script.
+  Décision : appliquer le modèle avec un **notebook Fabric `nb_05_semantic_model`** (semantic-link-labs / TOM), généré par
+  `generate_tmdl.py`. Bonus : il automatise aussi les réglages manuels (mesures implicites, table de dates, tris, masquage)
+  et affiche la requête de contrôle. Le script TMDL reste disponible pour Power BI Desktop.
+- Non vérifié : l'API semantic-link-labs n'est pas exécutable en CI (service Fabric requis).

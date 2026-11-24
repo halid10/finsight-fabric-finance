@@ -21,10 +21,10 @@ jobs:
         run: |
           python data/generator/generate_finance_data.py
           git diff --exit-code --stat data/raw
-      - name: Le script TMDL est synchronisé avec son générateur
+      - name: TMDL et notebook nb_05 synchronisés avec leur générateur
         run: |
           python powerbi/semantic-model/generate_tmdl.py
-          git diff --exit-code --stat powerbi/semantic-model/sm_finsight.tmdl
+          git diff --exit-code --stat powerbi/semantic-model/sm_finsight.tmdl fabric/workspace/nb_05_semantic_model.Notebook
       - name: Tests de cohérence des données
         run: python -m unittest discover -s tests -v
 

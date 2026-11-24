@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-Génère le script TMDL du modèle sémantique sm_finsight (powerbi/semantic-model/sm_finsight.tmdl).
+Génère, depuis une source unique, la définition du modèle sémantique sm_finsight :
+  - fabric/workspace/nb_05_semantic_model.Notebook : notebook Fabric qui applique tout via semantic-link-labs (recommandé)
+  - powerbi/semantic-model/sm_finsight.tmdl : script TMDL équivalent (référence / Power BI Desktop)
 
 Source unique de vérité pour : relations, groupe de calcul « Intelligence temporelle »,
 mesures (expression, description, dossier d'affichage, format).
@@ -317,7 +319,191 @@ def rendu_mesure(n, dossier, fmt, desc, expr) -> list:
     return bloc_objet(f"measure {nom(n)}", expr, 2, props, desc)
 
 
+# --------------------------------------------------------------------------------------
+# Paramétrage des colonnes (appliqué par le notebook nb_05)
+# --------------------------------------------------------------------------------------
+TABLE_DATES = ("dim_date", "date")
+TRIS = [  # (table, colonne, trier par)
+    ("dim_date", "mois_nom", "mois"),
+    ("dim_date", "mois_court", "mois"),
+    ("dim_date", "annee_mois", "annee_mois_num"),
+    ("dim_date", "jour_semaine", "jour_semaine_num"),
+    ("dim_compte", "ligne_pnl", "ordre_pnl"),
+    ("fact_factures_clients", "tranche_age", "tranche_age_ordre"),
+    ("fact_factures_fournisseurs", "tranche_age", "tranche_age_ordre"),
+]
+# Colonnes masquées : toutes les clés *_key + colonnes numériques exposées via des mesures
+COLONNES_MASQUEES = [
+    "debit", "credit", "debit_eur", "credit_eur", "montant_devise", "montant_eur", "montant_pnl_eur",
+    "budget_pnl_devise", "budget_pnl_eur", "montant_ht", "montant_tva", "montant_ttc", "montant_ht_eur",
+    "montant_ttc_eur", "tranche_age_ordre", "ordre_pnl", "annee_mois_num", "jour_semaine_num",
+]
+
+Q3 = "'" * 3  # délimiteur de chaîne brute pour le JSON embarqué
+NOTEBOOK = Path(__file__).resolve().parents[2] / "fabric" / "workspace" / "nb_05_semantic_model.Notebook" / "notebook-content.py"
+GROUPE = "Intelligence temporelle"
+
+
+def definitions() -> dict:
+    return {
+        "relations": [{"nom": n, "de": de, "vers": vers, "active": a} for n, de, vers, a in RELATIONS],
+        "groupe_calcul": {
+            "nom": GROUPE, "colonne": "Période", "precedence": 10,
+            "description": "Variantes temporelles applicables à toutes les mesures numériques (YTD, N-1, variations, 12 mois glissants).",
+            "elements": [{"nom": n, "expression": e, "format": f, "description": d} for n, e, f, d in ELEMENTS_TEMPS],
+        },
+        "mesures": [{"table": t, "nom": n, "dossier": dossier, "format": fmt, "description": d, "expression": e}
+                    for t, ms in MESURES.items() for n, dossier, fmt, d, e in ms],
+        "table_dates": list(TABLE_DATES),
+        "tris": [list(x) for x in TRIS],
+        "colonnes_masquees": COLONNES_MASQUEES,
+    }
+
+
+def generer_notebook() -> str:
+    import json
+    defs = json.dumps(definitions(), ensure_ascii=False, indent=1)
+    assert Q3 not in defs
+    meta = '\n# METADATA ********************\n\n# META {\n# META   "language": "python",\n# META   "language_group": "synapse_pyspark"\n# META }\n'
+    cellules = [
+        ("MARKDOWN", """# # nb_05 — Modèle sémantique sm_finsight (relations, groupe de calcul, mesures)
+#
+# **Fichier généré** par `powerbi/semantic-model/generate_tmdl.py` — ne pas modifier dans Fabric : modifier le générateur.
+#
+# Applique au modèle Direct Lake **`sm_finsight`** (via la bibliothèque *semantic-link-labs* / TOM) :
+#
+# | Étape | Détail |
+# |---|---|
+# | Paramétrage | mesures implicites découragées, `dim_date` = table de dates, tris, colonnes techniques masquées |
+# | Relations | 16 relations (2 inactives sur la date de paiement) — ignorées si elles existent déjà |
+# | Groupe de calcul | « Intelligence temporelle » (recréé à chaque exécution) |
+# | Mesures | 47 mesures avec description, dossier et format (créées ou mises à jour) |
+# | Contrôle | requête DAX : CA, EBITDA, DSO… par année, à comparer aux valeurs de référence |
+#
+# Idempotent : peut être relancé après chaque modification des définitions.
+#
+# ⚠️ Prérequis : le modèle `sm_finsight` existe (KAN-38) et contient les tables `dim_*` / `fact_*` du schéma `gold`."""),
+        ("PARAMETERS CELL", """modele = "sm_finsight"   # nom du modèle sémantique
+workspace = None          # None = workspace courant"""),
+        ("CELL", """# Installation de semantic-link-labs pour la session (bibliothèque Microsoft, PyPI)
+import subprocess
+import sys
+
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "semantic-link-labs"])"""),
+        ("CELL", "import json\n\nDEFS = json.loads(r" + Q3 + defs + Q3 + ")\nprint(len(DEFS['relations']), 'relations ·', len(DEFS['mesures']), 'mesures ·', len(DEFS['groupe_calcul']['elements']), 'éléments de calcul')"),
+        ("CELL", """import sempy.fabric as fabric
+from sempy_labs.tom import connect_semantic_model
+
+
+def trouver(collection, nom):
+    for objet in collection:
+        if objet.Name == nom:
+            return objet
+    return None
+
+
+with connect_semantic_model(dataset=modele, readonly=False, workspace=workspace) as tom:
+    m = tom.model
+
+    # 1. Paramétrage du modèle et des colonnes
+    m.DiscourageImplicitMeasures = True
+    table_d, col_d = DEFS["table_dates"]
+    try:
+        tom.mark_as_date_table(table_name=table_d, column_name=col_d)
+        print(f"📅 {table_d}[{col_d}] marquée comme table de dates")
+    except Exception as e:  # déjà marquée ou validation refusée
+        print(f"⚠️ Table de dates : {e}")
+    for table, colonne, par in DEFS["tris"]:
+        tom.set_sort_by_column(table_name=table, column_name=colonne, sort_by_column=par)
+    nb_masquees = 0
+    for t in m.Tables:
+        for c in t.Columns:
+            if c.Name.endswith("_key") or c.Name in DEFS["colonnes_masquees"]:
+                c.IsHidden = True
+                nb_masquees += 1
+    print(f"🙈 {nb_masquees} colonnes techniques masquées · {len(DEFS['tris'])} tris")
+
+    # 2. Relations (ignorées si une relation relie déjà les mêmes colonnes)
+    for r in DEFS["relations"]:
+        ft, fc = r["de"].split(".")
+        tt, tc = r["vers"].split(".")
+        existante = next((x for x in m.Relationships
+                          if x.FromTable.Name == ft and x.FromColumn.Name == fc
+                          and x.ToTable.Name == tt and x.ToColumn.Name == tc), None)
+        if existante is not None:
+            existante.IsActive = r["active"]
+            continue
+        tom.add_relationship(from_table=ft, from_column=fc, to_table=tt, to_column=tc,
+                             from_cardinality="Many", to_cardinality="One", is_active=r["active"])
+        print(f"🔗 {r['de']} → {r['vers']}" + ("" if r["active"] else " (inactive)"))
+
+    # 3. Groupe de calcul (recréé)
+    g = DEFS["groupe_calcul"]
+    ancien = trouver(m.Tables, g["nom"])
+    if ancien is not None:
+        tom.remove_object(object=ancien)
+    tom.add_calculation_group(name=g["nom"], precedence=g["precedence"], description=g["description"])
+    for c in m.Tables[g["nom"]].Columns:
+        if c.SourceColumn == "Name":
+            c.Name = g["colonne"]
+    for i, el in enumerate(g["elements"]):
+        tom.add_calculation_item(table_name=g["nom"], calculation_item_name=el["nom"], expression=el["expression"],
+                                 ordinal=i, description=el["description"], format_string_expression=el["format"])
+    print(f"🧮 Groupe de calcul « {g['nom']} » : {len(g['elements'])} éléments")
+
+    # 4. Mesures (créées ou mises à jour)
+    crees, maj = 0, 0
+    for d in DEFS["mesures"]:
+        table = m.Tables[d["table"]]
+        mesure = trouver(table.Measures, d["nom"])
+        if mesure is None:
+            tom.add_measure(table_name=d["table"], measure_name=d["nom"], expression=d["expression"],
+                            format_string=d["format"], display_folder=d["dossier"], description=d["description"])
+            crees += 1
+        else:
+            mesure.Expression = d["expression"]
+            mesure.FormatString = d["format"] or ""
+            mesure.DisplayFolder = d["dossier"]
+            mesure.Description = d["description"]
+            maj += 1
+    print(f"📐 Mesures : {crees} créées, {maj} mises à jour")
+
+print("💾 Modifications enregistrées dans le modèle")"""),
+        ("MARKDOWN", """# ## Recadrage Direct Lake et contrôle des valeurs
+#
+# Attendu : CA 2024 = 47,43 M€ · CA 2025 = 52,14 M€ · EBITDA 2025 = 8,14 M€ · DSO 2026 ≈ 68 j."""),
+        ("CELL", """fabric.refresh_dataset(dataset=modele, workspace=workspace, refresh_type="full")
+
+controle = fabric.evaluate_dax(dataset=modele, workspace=workspace, dax_string='''
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_date[annee],
+    "CA", [CA],
+    "CA N-1", [CA N-1],
+    "CA Var N-1 %", CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "Var N-1 %" ),
+    "CA Budget", [CA Budget],
+    "EBITDA", [EBITDA],
+    "EBITDA %", [EBITDA %],
+    "Résultat net", [Résultat net],
+    "DSO (jours)", [DSO (jours)],
+    "Trésorerie", [Trésorerie]
+)
+ORDER BY dim_date[annee]
+''')
+display(controle)"""),
+    ]
+    out = ["# Fabric notebook source", "", "# METADATA ********************", "", "# META {", '# META   "kernel_info": {',
+           '# META     "name": "synapse_pyspark"', "# META   },", '# META   "dependencies": {}', "# META }", ""]
+    for kind, body in cellules:
+        out += [f"# {kind} ********************", "", body, ""]
+        if kind != "MARKDOWN":
+            out += [meta]
+    return "\n".join(out).rstrip() + "\n"
+
+
 if __name__ == "__main__":
     SORTIE.write_text(generer(), encoding="utf-8")
+    NOTEBOOK.parent.mkdir(parents=True, exist_ok=True)
+    NOTEBOOK.write_text(generer_notebook(), encoding="utf-8")
     n = sum(len(v) for v in MESURES.values())
-    print(f"✅ {SORTIE.name} : {len(RELATIONS)} relations, {len(ELEMENTS_TEMPS)} éléments de calcul, {n} mesures")
+    print(f"✅ {SORTIE.name} + {NOTEBOOK.parent.name} : {len(RELATIONS)} relations, {len(ELEMENTS_TEMPS)} éléments de calcul, {n} mesures")

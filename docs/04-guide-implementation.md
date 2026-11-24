@@ -81,33 +81,33 @@ le typage est la responsabilité de Silver.
 1. Dans le Lakehouse : **Nouveau modèle sémantique** → nom `sm_finsight`.
 2. Déplier le schéma **`gold`** et cocher uniquement les tables `dim_*` et `fact_*` (pas `dq_resultats`, rien de `bronze`/`silver`) → Confirmer.
 
-### FS-43 · Paramétrer le modèle (avant le script)
-1. Ouvrir le modèle (**Ouvrir le modèle de données**) en mode **Modification**
-   (ou Power BI Desktop → *OneLake catalog* → `sm_finsight` → *Modifier*).
-2. **Désactiver les mesures implicites** : vue Modèle → sélectionner le modèle (fond du diagramme) → Propriétés →
-   *Décourager les mesures implicites* = **Activé**. ⚠️ Obligatoire pour les groupes de calcul.
-3. Sélectionner `dim_date` → **Marquer comme table de dates** → colonne `date`.
-4. Appliquer les tris (*Trier par colonne*) et masquer les colonnes techniques (section 3 de la
-   [spec](../powerbi/semantic-model/model-spec.md#3-paramétrage-des-colonnes)).
+### FS-43 → FS-45 · Configurer le modèle avec le notebook `nb_05_semantic_model` (recommandé)
 
-### FS-44 · Exécuter le script TMDL
-Le fichier [`sm_finsight.tmdl`](../powerbi/semantic-model/sm_finsight.tmdl) crée en une fois :
-**16 relations**, le **groupe de calcul « Intelligence temporelle »** et **47 mesures** avec description, dossier d'affichage et format.
+Le notebook [`nb_05_semantic_model`](../fabric/workspace/nb_05_semantic_model.Notebook/notebook-content.py)
+(synchronisé dans le workspace par Git) configure **tout le modèle en une exécution**, via *semantic-link-labs* :
 
-1. Ouvrir la **vue TMDL** (icône `</>` à gauche, dans Desktop ou dans l'édition web du modèle).
-2. Coller l'intégralité du fichier → **Appliquer** (▶).
-3. Vérifier : la table `Intelligence temporelle` apparaît, les mesures sont rangées en dossiers dans les tables de faits.
+| Étape | Ce qui est appliqué |
+|---|---|
+| FS-43 | Mesures implicites découragées · `dim_date` marquée table de dates · 7 tris · colonnes techniques masquées |
+| FS-44 | 16 relations · groupe de calcul « Intelligence temporelle » · 47 mesures (description, dossier, format) |
+| FS-45 | Recadrage Direct Lake + requête de contrôle affichée en fin de notebook |
 
-> Si vous aviez déjà créé des relations à la main, supprimez-les d'abord : le script les recrée sous des noms explicites
-> (`fact_gl_date`, …) et deux relations sur les mêmes colonnes sont refusées.
-> Pour modifier une mesure : éditer [`generate_tmdl.py`](../powerbi/semantic-model/generate_tmdl.py), lancer
-> `python3 powerbi/semantic-model/generate_tmdl.py`, puis réappliquer le script (`createOrReplace` = idempotent).
+1. Ouvrir `nb_05_semantic_model` → vérifier la cellule de paramètres (`modele = "sm_finsight"`).
+2. **Exécuter tout** (la 1re cellule installe `semantic-link-labs` pour la session, ~1 min).
+3. Comparer le tableau final avec les [valeurs de référence](05-dictionnaire-kpi.md#valeurs-de-référence-pour-valider-le-rapport).
 
-### FS-45 · Valider le modèle
-1. Vue **Requête DAX** → coller [`controle.dax`](../powerbi/semantic-model/controle.dax) → **Exécuter**.
-2. Comparer avec les [valeurs de référence](05-dictionnaire-kpi.md#valeurs-de-référence-pour-valider-le-rapport).
+Le notebook est **idempotent** : relations existantes conservées, groupe de calcul recréé, mesures créées ou mises à jour.
+Pour modifier une mesure : éditer [`generate_tmdl.py`](../powerbi/semantic-model/generate_tmdl.py), lancer
+`python3 powerbi/semantic-model/generate_tmdl.py`, pousser, mettre à jour le workspace depuis Git, relancer `nb_05`.
 
-✅ *Critère* : `CA` filtré sur 2025 = **52,14 M€** ; l'élément `Var N-1 %` du groupe de calcul s'affiche en pourcentage.
+✅ *Critère* : `CA` 2025 = **52,14 M€** ; colonne `CA Var N-1 %` en pourcentage.
+
+#### Alternative : script TMDL (Power BI Desktop)
+[`sm_finsight.tmdl`](../powerbi/semantic-model/sm_finsight.tmdl) contient les mêmes définitions en un seul `createOrReplace`.
+⚠️ La vue TMDL de l'édition **web** refuse actuellement les scripts à plusieurs objets
+(« Applying a script with multiple commands is not supported at this stage ») : utiliser le notebook.
+Avec le script, les réglages de FS-43 (mesures implicites, table de dates, tris, masquage) restent manuels
+(voir [spec §3](../powerbi/semantic-model/model-spec.md#3-paramétrage-des-colonnes)).
 
 ---
 
@@ -145,6 +145,7 @@ Après chaque modification dans Fabric (notebook, etc.) : panneau **Contrôle de
 |---|---|---|
 | `AnalysisException: Path does not exist: Files/raw/...` | Pas de Lakehouse par défaut, ou dossier mal nommé | Attacher `lh_finsight` au notebook, vérifier `Files/raw/gl` |
 | `[SCHEMA_NOT_FOUND]` ou `CREATE SCHEMA` refusé | Lakehouse créé sans l'option schémas | Recréer `lh_finsight` en cochant « Lakehouse schemas » |
+| `nb_05` : erreur XMLA / *read-write* | Point de terminaison XMLA en lecture seule | Portail d'administration → Paramètres de capacité → XMLA Endpoint = **Lecture/écriture** |
 | `NameError: notebookutils` | Ancien runtime | Paramètres du workspace → Spark → Runtime **1.3** |
 | Colonnes `_eur` vides | Taux de change non chargés | Vérifier `bronze.taux_change`, relancer nb_02 |
 | Visuels lents / « DirectQuery » dans l'analyseur de performances | Fallback Direct Lake | Vérifier qu'aucune table SQL view n'est utilisée ; réexécuter `OPTIMIZE` |
