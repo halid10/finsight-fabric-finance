@@ -1,0 +1,465 @@
+createOrReplace
+
+	relationship fact_gl_date
+		fromColumn: fact_gl.date_key
+		toColumn: dim_date.date_key
+
+	relationship fact_gl_entite
+		fromColumn: fact_gl.entite_key
+		toColumn: dim_entite.entite_key
+
+	relationship fact_gl_compte
+		fromColumn: fact_gl.compte_key
+		toColumn: dim_compte.compte_key
+
+	relationship fact_gl_centre_cout
+		fromColumn: fact_gl.cc_key
+		toColumn: dim_centre_cout.cc_key
+
+	relationship fact_budget_date
+		fromColumn: fact_budget.date_key
+		toColumn: dim_date.date_key
+
+	relationship fact_budget_entite
+		fromColumn: fact_budget.entite_key
+		toColumn: dim_entite.entite_key
+
+	relationship fact_budget_compte
+		fromColumn: fact_budget.compte_key
+		toColumn: dim_compte.compte_key
+
+	relationship fact_budget_centre_cout
+		fromColumn: fact_budget.cc_key
+		toColumn: dim_centre_cout.cc_key
+
+	relationship fact_factures_clients_date_facture
+		fromColumn: fact_factures_clients.date_key
+		toColumn: dim_date.date_key
+
+	relationship fact_factures_clients_date_paiement
+		isActive: false
+		fromColumn: fact_factures_clients.date_paiement_key
+		toColumn: dim_date.date_key
+
+	relationship fact_factures_clients_entite
+		fromColumn: fact_factures_clients.entite_key
+		toColumn: dim_entite.entite_key
+
+	relationship fact_factures_clients_tiers
+		fromColumn: fact_factures_clients.client_key
+		toColumn: dim_client.client_key
+
+	relationship fact_factures_fournisseurs_date_facture
+		fromColumn: fact_factures_fournisseurs.date_key
+		toColumn: dim_date.date_key
+
+	relationship fact_factures_fournisseurs_date_paiement
+		isActive: false
+		fromColumn: fact_factures_fournisseurs.date_paiement_key
+		toColumn: dim_date.date_key
+
+	relationship fact_factures_fournisseurs_entite
+		fromColumn: fact_factures_fournisseurs.entite_key
+		toColumn: dim_entite.entite_key
+
+	relationship fact_factures_fournisseurs_tiers
+		fromColumn: fact_factures_fournisseurs.fournisseur_key
+		toColumn: dim_fournisseur.fournisseur_key
+
+
+createOrReplace
+
+	ref table fact_gl
+
+		/// Montant du compte de résultat en EUR : crédit − débit (produits positifs, charges négatives) sur les comptes filtrés.
+		measure 'Réel' = SUM ( fact_gl[montant_pnl_eur] )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Chiffre d'affaires : prestations et abonnements facturés (comptes 706xxx).
+		measure 'CA' = CALCULATE ( [Réel], dim_compte[ligne_pnl] = "Chiffre d'affaires" )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Sous-traitance, licences et hébergement revendus (comptes 604, 607). Valeur négative.
+		measure 'Coût des ventes' = CALCULATE ( [Réel], dim_compte[ligne_pnl] = "Coût des ventes" )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Chiffre d'affaires + coût des ventes.
+		measure 'Marge brute' = CALCULATE ( [Réel], dim_compte[agregat] = "Marge brute" )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Loyers, honoraires, marketing, déplacements, télécoms, logiciels… (comptes 606 à 651). Valeur négative.
+		measure 'Charges externes' = CALCULATE ( [Réel], dim_compte[ligne_pnl] = "Charges externes" )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Salaires bruts + charges sociales (comptes 641, 645). Valeur négative.
+		measure 'Charges de personnel' = CALCULATE ( [Réel], dim_compte[ligne_pnl] = "Charges de personnel" )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Résultat avant amortissements, résultat financier et impôt.
+		measure 'EBITDA' = CALCULATE ( [Réel], dim_compte[agregat] IN { "Marge brute", "EBITDA" } )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// EBITDA − dotations aux amortissements (EBIT).
+		measure 'Résultat d''exploitation' = CALCULATE ( [Réel], dim_compte[agregat] IN { "Marge brute", "EBITDA", "Résultat d'exploitation" } )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Somme de tous les comptes de résultat (classes 6 et 7).
+		measure 'Résultat net' = CALCULATE ( [Réel], dim_compte[est_compte_resultat] = TRUE () )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Pour la matrice du compte de résultat : masque les comptes de bilan ; le total général vaut le résultat net.
+		measure 'Montant P&L' = CALCULATE ( [Réel], KEEPFILTERS ( dim_compte[est_compte_resultat] = TRUE () ) )
+			formatString: #,##0 €
+			displayFolder: 1. Compte de résultat
+
+		/// Marge brute / chiffre d'affaires.
+		measure 'Marge brute %' = DIVIDE ( [Marge brute], [CA] )
+			formatString: 0.0 %
+			displayFolder: 1. Compte de résultat\Ratios
+
+		/// EBITDA / chiffre d'affaires.
+		measure 'EBITDA %' = DIVIDE ( [EBITDA], [CA] )
+			formatString: 0.0 %
+			displayFolder: 1. Compte de résultat\Ratios
+
+		/// Résultat net / chiffre d'affaires.
+		measure 'Résultat net %' = DIVIDE ( [Résultat net], [CA] )
+			formatString: 0.0 %
+			displayFolder: 1. Compte de résultat\Ratios
+
+		/// Charges de personnel / chiffre d'affaires (en valeur positive).
+		measure 'Personnel % CA' = DIVIDE ( - [Charges de personnel], [CA] )
+			formatString: 0.0 %
+			displayFolder: 1. Compte de résultat\Ratios
+
+		/// Solde du compte 512 (banque) à la date de référence. Mouvements convertis au taux moyen du mois.
+		measure 'Trésorerie' =
+				VAR _d = [Date de référence]
+				RETURN
+					CALCULATE (
+						SUM ( fact_gl[montant_eur] ),
+						dim_compte[numero_compte] = "512000",
+						REMOVEFILTERS ( dim_date ),
+						dim_date[date] <= _d
+					)
+			formatString: #,##0 €
+			displayFolder: 6. Trésorerie
+
+		/// Mouvements nets du compte 512 sur la période.
+		measure 'Variation de trésorerie' = CALCULATE ( SUM ( fact_gl[montant_eur] ), dim_compte[numero_compte] = "512000" )
+			formatString: #,##0 €
+			displayFolder: 6. Trésorerie
+
+		/// Encaissements sur le compte 512 (hors à-nouveaux).
+		measure 'Entrées de trésorerie' = CALCULATE ( SUM ( fact_gl[debit_eur] ), dim_compte[numero_compte] = "512000", fact_gl[journal] <> "AN" )
+			formatString: #,##0 €
+			displayFolder: 6. Trésorerie
+
+		/// Décaissements sur le compte 512 (valeur négative).
+		measure 'Sorties de trésorerie' = CALCULATE ( - SUM ( fact_gl[credit_eur] ), dim_compte[numero_compte] = "512000" )
+			formatString: #,##0 €
+			displayFolder: 6. Trésorerie
+
+		/// Besoin en fonds de roulement simplifié : encours clients − encours fournisseurs.
+		measure 'BFR clients - fournisseurs' = [Encours clients] - [Encours fournisseurs]
+			formatString: #,##0 €
+			displayFolder: 6. Trésorerie
+
+		/// Date de la dernière extraction comptable chargée.
+		measure 'Date d''arrêté' = CALCULATE ( MAX ( dim_date[date] ), REMOVEFILTERS ( dim_date ), dim_date[est_avant_arrete] = TRUE () )
+			formatString: dd/mm/yyyy
+			displayFolder: 9. Utilitaires
+
+		/// Dernier jour de la période filtrée, plafonné à la date d'arrêté. Sert aux mesures « à date ».
+		measure 'Date de référence' = MIN ( MAX ( dim_date[date] ), [Date d'arrêté] )
+			formatString: dd/mm/yyyy
+			displayFolder: 9. Utilitaires
+
+		/// Titre dynamique affiché dans le bandeau des pages.
+		measure 'Titre rapport' = "FinSight — données arrêtées au " & FORMAT ( [Date d'arrêté], "dd/mm/yyyy" )
+			displayFolder: 9. Utilitaires
+
+		/// Période filtrée en clair (ex. « janv. 2025 → oct. 2025 »).
+		measure 'Libellé période' =
+				VAR _min = MIN ( dim_date[date] )
+				VAR _max = MIN ( MAX ( dim_date[date] ), [Date d'arrêté] )
+				RETURN FORMAT ( _min, "mmm yyyy" ) & " → " & FORMAT ( _max, "mmm yyyy" )
+			displayFolder: 9. Utilitaires
+
+	ref table fact_budget
+
+		/// Budget mensualisé en EUR, même convention de signe que le réel.
+		measure 'Budget' = SUM ( fact_budget[budget_pnl_eur] )
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Chiffre d'affaires budgété.
+		measure 'CA Budget' = CALCULATE ( [Budget], dim_compte[ligne_pnl] = "Chiffre d'affaires" )
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// EBITDA budgété.
+		measure 'EBITDA Budget' = CALCULATE ( [Budget], dim_compte[agregat] IN { "Marge brute", "EBITDA" } )
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Résultat net budgété.
+		measure 'Résultat net Budget' = CALCULATE ( [Budget], dim_compte[est_compte_resultat] = TRUE () )
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Budget limité aux mois clôturés (≤ date d'arrêté) : évite de comparer un budget annuel à un réel partiel.
+		measure 'Budget à date' = CALCULATE ( [Budget], KEEPFILTERS ( dim_date[est_avant_arrete] = TRUE () ) )
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Réel − budget. Positif = favorable (plus de produits ou moins de charges).
+		measure 'Écart budget' = [Réel] - [Budget]
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Réel − budget à date. Positif = favorable.
+		measure 'Écart budget à date' = [Réel] - [Budget à date]
+			formatString: #,##0 €
+			displayFolder: 2. Budget
+
+		/// Écart budget à date / |budget à date|.
+		measure 'Écart budget %' = DIVIDE ( [Écart budget à date], ABS ( [Budget à date] ) )
+			formatString: +0.0 %;-0.0 %;0.0 %
+			displayFolder: 2. Budget
+
+		/// CA réel / CA budgété.
+		measure 'Taux de réalisation CA' = DIVIDE ( [CA], [CA Budget] )
+			formatString: 0.0 %
+			displayFolder: 2. Budget
+
+		/// ▲ si l'écart budget à date est favorable, ▼ sinon (mise en forme conditionnelle).
+		measure 'Écart budget indicateur' =
+				VAR _e = [Écart budget à date]
+				RETURN IF ( ISBLANK ( _e ), BLANK (), IF ( _e >= 0, "▲", "▼" ) )
+			displayFolder: 2. Budget
+
+	ref table fact_factures_clients
+
+		/// Montant TTC des factures clients émises sur la période (date de facture).
+		measure 'CA facturé TTC' = SUM ( fact_factures_clients[montant_ttc_eur] )
+			formatString: #,##0 €
+			displayFolder: 4. Créances clients
+
+		/// Montant TTC dû par les clients à la date de référence : factures émises avant cette date et non réglées à cette date.
+		measure 'Encours clients' =
+				VAR _d = [Date de référence]
+				RETURN
+					CALCULATE (
+						SUM ( fact_factures_clients[montant_ttc_eur] ),
+						REMOVEFILTERS ( dim_date ),
+						fact_factures_clients[date_facture] <= _d,
+						ISBLANK ( fact_factures_clients[date_paiement] ) || fact_factures_clients[date_paiement] > _d
+					)
+			formatString: #,##0 €
+			displayFolder: 4. Créances clients
+
+		/// Partie de l'encours clients dont l'échéance est dépassée à la date de référence.
+		measure 'Encours clients échu' =
+				VAR _d = [Date de référence]
+				RETURN
+					CALCULATE (
+						SUM ( fact_factures_clients[montant_ttc_eur] ),
+						REMOVEFILTERS ( dim_date ),
+						fact_factures_clients[date_facture] <= _d,
+						fact_factures_clients[date_echeance] < _d,
+						ISBLANK ( fact_factures_clients[date_paiement] ) || fact_factures_clients[date_paiement] > _d
+					)
+			formatString: #,##0 €
+			displayFolder: 4. Créances clients
+
+		/// Encours échu / encours clients.
+		measure '% Encours échu' = DIVIDE ( [Encours clients échu], [Encours clients] )
+			formatString: 0.0 %
+			displayFolder: 4. Créances clients
+
+		/// Délai moyen d'encaissement : encours clients / CA TTC des 90 derniers jours × 90.
+		measure 'DSO (jours)' =
+				VAR _d = [Date de référence]
+				VAR _ca90 = CALCULATE ( [CA facturé TTC], DATESINPERIOD ( dim_date[date], _d, -90, DAY ) )
+				RETURN DIVIDE ( [Encours clients], _ca90 ) * 90
+			formatString: #,##0
+			displayFolder: 4. Créances clients
+
+		/// Encours des factures ouvertes à la date d'arrêté (à croiser avec la tranche d'âge pour la balance âgée).
+		measure 'Encours à l''arrêté' =
+				CALCULATE (
+					SUM ( fact_factures_clients[montant_ttc_eur] ),
+					REMOVEFILTERS ( dim_date ),
+					fact_factures_clients[est_ouverte] = TRUE ()
+				)
+			formatString: #,##0 €
+			displayFolder: 4. Créances clients
+
+		/// Nombre de factures clients non réglées à la date d'arrêté.
+		measure 'Nb factures ouvertes' = CALCULATE ( COUNTROWS ( fact_factures_clients ), REMOVEFILTERS ( dim_date ), fact_factures_clients[est_ouverte] = TRUE () )
+			formatString: #,##0
+			displayFolder: 4. Créances clients
+
+		/// Retard moyen pondéré par le montant des factures réglées (date de paiement − échéance).
+		measure 'Retard moyen de paiement (jours)' =
+				CALCULATE (
+					DIVIDE (
+						SUMX ( fact_factures_clients, fact_factures_clients[jours_retard] * fact_factures_clients[montant_ttc_eur] ),
+						SUM ( fact_factures_clients[montant_ttc_eur] )
+					),
+					fact_factures_clients[est_ouverte] = FALSE ()
+				)
+			formatString: #,##0.0
+			displayFolder: 4. Créances clients
+
+		/// Montant TTC des factures réglées sur la période (date de paiement).
+		measure 'Encaissements clients' =
+				CALCULATE (
+					SUM ( fact_factures_clients[montant_ttc_eur] ),
+					USERELATIONSHIP ( fact_factures_clients[date_paiement_key], dim_date[date_key] )
+				)
+			formatString: #,##0 €
+			displayFolder: 4. Créances clients
+
+	ref table fact_factures_fournisseurs
+
+		/// Montant TTC des factures fournisseurs reçues sur la période.
+		measure 'Achats TTC' = SUM ( fact_factures_fournisseurs[montant_ttc_eur] )
+			formatString: #,##0 €
+			displayFolder: 5. Dettes fournisseurs
+
+		/// Montant TTC dû aux fournisseurs à la date de référence.
+		measure 'Encours fournisseurs' =
+				VAR _d = [Date de référence]
+				RETURN
+					CALCULATE (
+						SUM ( fact_factures_fournisseurs[montant_ttc_eur] ),
+						REMOVEFILTERS ( dim_date ),
+						fact_factures_fournisseurs[date_facture] <= _d,
+						ISBLANK ( fact_factures_fournisseurs[date_paiement] ) || fact_factures_fournisseurs[date_paiement] > _d
+					)
+			formatString: #,##0 €
+			displayFolder: 5. Dettes fournisseurs
+
+		/// Délai moyen de paiement des fournisseurs : encours fournisseurs / achats TTC des 90 derniers jours × 90.
+		measure 'DPO (jours)' =
+				VAR _d = [Date de référence]
+				VAR _achats90 = CALCULATE ( [Achats TTC], DATESINPERIOD ( dim_date[date], _d, -90, DAY ) )
+				RETURN DIVIDE ( [Encours fournisseurs], _achats90 ) * 90
+			formatString: #,##0
+			displayFolder: 5. Dettes fournisseurs
+
+		/// Montant TTC des factures fournisseurs payées sur la période.
+		measure 'Décaissements fournisseurs' =
+				CALCULATE (
+					SUM ( fact_factures_fournisseurs[montant_ttc_eur] ),
+					USERELATIONSHIP ( fact_factures_fournisseurs[date_paiement_key], dim_date[date_key] )
+				)
+			formatString: #,##0 €
+			displayFolder: 5. Dettes fournisseurs
+
+
+createOrReplace
+
+	/// Variantes temporelles applicables à toutes les mesures numériques (YTD, N-1, variations, 12 mois glissants).
+	table 'Intelligence temporelle'
+
+		calculationGroup
+			precedence: 10
+
+			/// Valeur de la période filtrée (comportement par défaut).
+			calculationItem 'Période' = SELECTEDMEASURE ()
+				ordinal: 0
+
+			/// Cumul depuis le 1er janvier jusqu'à la fin de la période filtrée.
+			calculationItem 'YTD' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						CALCULATE ( SELECTEDMEASURE (), DATESYTD ( dim_date[date] ) )
+					)
+				ordinal: 1
+
+			/// Même période l'année précédente.
+			calculationItem 'N-1' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+					)
+				ordinal: 2
+
+			/// Cumul annuel de l'année précédente, à date équivalente.
+			calculationItem 'YTD N-1' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						CALCULATE ( SELECTEDMEASURE (), DATESYTD ( SAMEPERIODLASTYEAR ( dim_date[date] ) ) )
+					)
+				ordinal: 3
+
+			/// Écart en valeur avec la même période de l'année précédente (N − N-1).
+			calculationItem 'Var N-1' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						VAR _n = SELECTEDMEASURE ()
+						VAR _n1 = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+						RETURN IF ( NOT ISBLANK ( _n ) && NOT ISBLANK ( _n1 ), _n - _n1 )
+					)
+				ordinal: 4
+
+			/// Écart relatif avec la même période de l'année précédente : (N − N-1) / |N-1|.
+			calculationItem 'Var N-1 %' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						VAR _n = SELECTEDMEASURE ()
+						VAR _n1 = CALCULATE ( SELECTEDMEASURE (), SAMEPERIODLASTYEAR ( dim_date[date] ) )
+						RETURN DIVIDE ( _n - _n1, ABS ( _n1 ) )
+					)
+				ordinal: 5
+				formatStringDefinition = "+0.0 %;-0.0 %;0.0 %"
+
+			/// Somme des 12 derniers mois jusqu'à la fin de la période filtrée.
+			calculationItem '12 mois glissants' =
+					IF (
+						ISSELECTEDMEASURE ( [Titre rapport], [Libellé période], [Date d'arrêté], [Date de référence], [Écart budget indicateur] ),
+						SELECTEDMEASURE (),
+						CALCULATE ( SELECTEDMEASURE (), DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -12, MONTH ) )
+					)
+				ordinal: 6
+
+		column 'Période'
+			dataType: string
+			summarizeBy: none
+			sourceColumn: Name
+			sortByColumn: Ordinal
+
+		column Ordinal
+			dataType: int64
+			isHidden
+			summarizeBy: none
+			sourceColumn: Ordinal
+
+		partition 'Intelligence temporelle' = calculationGroup
+
+
+createOrReplace
+
+	ref table fact_gl
+
+		/// Chiffre d'affaires de la même période l'an dernier (raccourci du groupe de calcul, utile dans les graphiques combinés).
+		measure 'CA N-1' = CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "N-1" )
+			formatString: #,##0 €
+			displayFolder: 3. Temps

@@ -1,0 +1,32 @@
+// =====================================================================================
+//  FinSight — requête de contrôle (vue Requête DAX), à exécuter APRÈS le script sm_finsight.tmdl
+//  Attendu (docs/05-dictionnaire-kpi.md) : CA 2024 = 47,43 M€ · CA 2025 = 52,14 M€ · EBITDA 2025 = 8,14 M€
+//  DSO au 31/10/2026 ≈ 68 j (ligne 2026).
+// =====================================================================================
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_date[annee],
+    "CA", [CA],
+    "CA N-1", [CA N-1],
+    "CA Var N-1 %", CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "Var N-1 %" ),
+    "CA Budget", [CA Budget],
+    "Taux réalisation CA", [Taux de réalisation CA],
+    "EBITDA", [EBITDA],
+    "EBITDA %", [EBITDA %],
+    "Résultat net", [Résultat net],
+    "DSO (jours)", [DSO (jours)],
+    "DPO (jours)", [DPO (jours)],
+    "Trésorerie", [Trésorerie]
+)
+ORDER BY dim_date[annee]
+
+// Deuxième contrôle : le groupe de calcul sur une année (2025)
+EVALUATE
+CALCULATETABLE (
+    ADDCOLUMNS (
+        VALUES ( 'Intelligence temporelle'[Période] ),
+        "CA", [CA],
+        "EBITDA %", [EBITDA %]
+    ),
+    dim_date[annee] = 2025
+)

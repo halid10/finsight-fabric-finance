@@ -81,24 +81,33 @@ le typage est la responsabilité de Silver.
 1. Dans le Lakehouse : **Nouveau modèle sémantique** → nom `sm_finsight`.
 2. Déplier le schéma **`gold`** et cocher uniquement les tables `dim_*` et `fact_*` (pas `dq_resultats`, rien de `bronze`/`silver`) → Confirmer.
 
-### FS-43 · Relations et table de dates
-1. Ouvrir le modèle (**Ouvrir le modèle de données**), passer en mode **Modification**.
-2. Créer les relations listées dans [`model-spec.md`](../powerbi/semantic-model/model-spec.md#2-relations-toutes-plusieurs-à-un-filtrage-unidirectionnel)
-   (glisser la clé du fait vers la clé de la dimension). Les relations sur `date_paiement_key` doivent être **inactives**.
+### FS-43 · Paramétrer le modèle (avant le script)
+1. Ouvrir le modèle (**Ouvrir le modèle de données**) en mode **Modification**
+   (ou Power BI Desktop → *OneLake catalog* → `sm_finsight` → *Modifier*).
+2. **Désactiver les mesures implicites** : vue Modèle → sélectionner le modèle (fond du diagramme) → Propriétés →
+   *Décourager les mesures implicites* = **Activé**. ⚠️ Obligatoire pour les groupes de calcul.
 3. Sélectionner `dim_date` → **Marquer comme table de dates** → colonne `date`.
-4. Appliquer les tris (*Trier par colonne*) et masquer les colonnes techniques (section 3 de la spec).
+4. Appliquer les tris (*Trier par colonne*) et masquer les colonnes techniques (section 3 de la
+   [spec](../powerbi/semantic-model/model-spec.md#3-paramétrage-des-colonnes)).
 
-### FS-44 · Ajouter les mesures
-1. Ouvrir la vue **Requête DAX** (icône en bas à gauche).
-2. Coller l'intégralité de [`measures.dax`](../powerbi/semantic-model/measures.dax) → **Exécuter**.
-   Le résultat affiche CA, EBITDA, DSO… par année : comparer avec les valeurs de référence.
-3. Cliquer **Mettre à jour le modèle avec les modifications** (en haut de la requête) → les ~60 mesures sont créées.
+### FS-44 · Exécuter le script TMDL
+Le fichier [`sm_finsight.tmdl`](../powerbi/semantic-model/sm_finsight.tmdl) crée en une fois :
+**16 relations**, le **groupe de calcul « Intelligence temporelle »** et **47 mesures** avec description, dossier d'affichage et format.
 
-### FS-45 · Finitions
-- Dossiers d'affichage et formats selon les commentaires de `measures.dax`.
-- Descriptions des mesures (copier la définition du [dictionnaire des KPI](05-dictionnaire-kpi.md)).
+1. Ouvrir la **vue TMDL** (icône `</>` à gauche, dans Desktop ou dans l'édition web du modèle).
+2. Coller l'intégralité du fichier → **Appliquer** (▶).
+3. Vérifier : la table `Intelligence temporelle` apparaît, les mesures sont rangées en dossiers dans les tables de faits.
 
-✅ *Critère* : `CA` filtré sur 2025 = **52,14 M€**.
+> Si vous aviez déjà créé des relations à la main, supprimez-les d'abord : le script les recrée sous des noms explicites
+> (`fact_gl_date`, …) et deux relations sur les mêmes colonnes sont refusées.
+> Pour modifier une mesure : éditer [`generate_tmdl.py`](../powerbi/semantic-model/generate_tmdl.py), lancer
+> `python3 powerbi/semantic-model/generate_tmdl.py`, puis réappliquer le script (`createOrReplace` = idempotent).
+
+### FS-45 · Valider le modèle
+1. Vue **Requête DAX** → coller [`controle.dax`](../powerbi/semantic-model/controle.dax) → **Exécuter**.
+2. Comparer avec les [valeurs de référence](05-dictionnaire-kpi.md#valeurs-de-référence-pour-valider-le-rapport).
+
+✅ *Critère* : `CA` filtré sur 2025 = **52,14 M€** ; l'élément `Var N-1 %` du groupe de calcul s'affiche en pourcentage.
 
 ---
 

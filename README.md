@@ -64,7 +64,7 @@ flowchart LR
 | [`data/generator/`](data/generator/) | Générateur Python (bibliothèque standard uniquement) de données financières réalistes et cohérentes |
 | [`data/raw/`](data/raw/) | Jeu de données généré, prêt à charger dans le Lakehouse |
 | [`fabric/`](fabric/) | Notebooks PySpark au format Git Fabric (Bronze, Silver, Gold, qualité), pipeline, scripts SQL |
-| [`powerbi/`](powerbi/) | Mesures DAX, spécification du modèle sémantique, maquette du rapport, sécurité RLS, thème |
+| [`powerbi/`](powerbi/) | Script TMDL du modèle (relations, groupe de calcul, mesures documentées), spécification, maquette du rapport, thème |
 | [`tests/`](tests/) | Tests automatisés de cohérence des données (écritures équilibrées, etc.) |
 | [`BACKLOG.md`](BACKLOG.md) | **Toutes les tâches du projet**, par sprint, avec critères d'acceptation |
 

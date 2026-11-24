@@ -6,6 +6,10 @@ segments **Année**, **Entité** et **Mois** synchronisés entre les pages (Affi
 
 Règle de couleur : **vert = favorable, rouge = défavorable** (écarts positifs = favorables, cf. convention de signe).
 
+**Intelligence temporelle** : pas de mesures « YTD » dédiées. On utilise le groupe de calcul `Intelligence temporelle`
+(colonne `Période` : Période, YTD, N-1, YTD N-1, Var N-1, Var N-1 %, 12 mois glissants) — en filtre de visuel pour une carte,
+en colonnes d'une matrice, ou en légende d'un graphique. Notation ci-dessous : `CA` [YTD] = mesure `CA` + filtre `Période = YTD`.
+
 ---
 
 ## Page 1 — Synthèse direction
@@ -29,7 +33,7 @@ Règle de couleur : **vert = favorable, rouge = défavorable** (écarts positifs
 
 | Visuel | Champs |
 |---|---|
-| 6 cartes KPI (nouveau visuel *Card*) | `CA YTD` + référence `CA YTD N-1` · `EBITDA YTD` + `Budget YTD` · `EBITDA %` · `Résultat net YTD` · `DSO (jours)` · `Trésorerie` |
+| 6 cartes KPI (nouveau visuel *Card*) | `CA` [YTD] + référence `CA` [Var N-1 %] · `EBITDA` [YTD] + référence `EBITDA Budget` [YTD] · `EBITDA %` [YTD] · `Résultat net` [YTD] · `DSO (jours)` · `Trésorerie` |
 | Graphique combiné | Axe `dim_date[annee_mois]` ; colonnes `CA` ; lignes `CA Budget`, `CA N-1` |
 | Barres horizontales | Axe `dim_entite[code_entite]` ; valeur `EBITDA` ; info-bulle `EBITDA %` |
 | Cascade | Catégorie `dim_compte[ligne_pnl]` ; valeur `Montant P&L` |
@@ -42,7 +46,8 @@ Règle de couleur : **vert = favorable, rouge = défavorable** (écarts positifs
 | Visuel | Champs |
 |---|---|
 | Matrice | Lignes : hiérarchie `dim_compte` (Ligne P&L → Compte) ; Colonnes : `dim_date[mois_court]` ; Valeur : `Montant P&L` ; sous-totaux de lignes activés |
-| Matrice (variante) | Lignes : Ligne P&L ; Valeurs : `Réel`, `Budget à date`, `Écart budget à date`, `Écart budget %`, `CA N-1` |
+| Matrice (variante) | Lignes : Ligne P&L ; Valeurs : `Réel`, `Budget à date`, `Écart budget à date`, `Écart budget %` |
+| Matrice (N vs N-1) | Lignes : Ligne P&L ; Colonnes : `Intelligence temporelle[Période]` filtrée sur Période, N-1, Var N-1, Var N-1 % ; Valeur : `Montant P&L` |
 | Segment | `dim_entite[code_entite]`, `dim_centre_cout[departement]` |
 
 Mise en forme conditionnelle : icônes sur `Écart budget %` (▲ vert si ≥ 0, ▼ rouge sinon).
@@ -53,10 +58,10 @@ Mise en forme conditionnelle : icônes sur `Écart budget %` (▲ vert si ≥ 0,
 
 | Visuel | Champs |
 |---|---|
-| Jauge | Valeur `CA YTD` ; cible `Budget YTD` (filtré sur CA) |
+| Jauge | Valeur `CA` ; cible `CA Budget` ; filtre du visuel `Période = YTD` |
 | Barres groupées | Axe `dim_centre_cout[libelle_cc]` ; valeurs `Réel`, `Budget à date` (charges) |
 | Tableau Top écarts | `dim_compte[compte_libelle]`, `Réel`, `Budget à date`, `Écart budget à date` trié par écart croissant (pires d'abord) |
-| Courbe | Axe mois ; `Écart YTD` cumulé |
+| Courbe | Axe mois ; `Écart budget à date` avec filtre `Période = YTD` (écart cumulé) |
 | Arbre de décomposition | Analyser `Écart budget à date` par Entité → Département → Compte |
 
 ## Page 4 — Créances clients & DSO

@@ -74,11 +74,11 @@ relancer le notebook ne crée aucun doublon.
 | ID | Jira | Tâche | Type | Statut |
 |---|---|---|---|---|
 | FS-40 | KAN-36 | Spécifier le modèle (tables, relations, colonnes masquées) | 🤖 | [x] |
-| FS-41 | KAN-37 | Écrire les mesures DAX (P&L, budget, time intelligence, BFR, trésorerie) | 🤖 | [x] |
+| FS-41 | KAN-37 | Script TMDL : relations, groupe de calcul « Intelligence temporelle », 47 mesures (descriptions, dossiers, formats) | 🤖 | [x] |
 | FS-42 | KAN-38 | Créer le modèle sémantique Direct Lake `sm_finsight` depuis le Lakehouse | 🧑‍💻 | [ ] |
-| FS-43 | KAN-39 | Créer les relations et marquer `dim_date` comme table de dates | 🧑‍💻 | [ ] |
-| FS-44 | KAN-40 | Ajouter les mesures via la vue Requête DAX (`powerbi/semantic-model/measures.dax`) | 🧑‍💻 | [ ] |
-| FS-45 | KAN-41 | Organiser les mesures en dossiers d'affichage, formats, descriptions | 🧑‍💻 | [ ] |
+| FS-43 | KAN-39 | Paramétrer le modèle : mesures implicites désactivées, table de dates, tris, colonnes masquées | 🧑‍💻 | [ ] |
+| FS-44 | KAN-40 | Exécuter le script TMDL `powerbi/semantic-model/sm_finsight.tmdl` dans la vue TMDL | 🧑‍💻 | [ ] |
+| FS-45 | KAN-41 | Valider le modèle avec `controle.dax` (valeurs de référence) | 🧑‍💻 | [ ] |
 
 **Critères d'acceptation** : CA 2025 du modèle = CA 2025 calculé en SQL ; aucun fallback DirectQuery.
 

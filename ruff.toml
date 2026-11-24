@@ -7,3 +7,5 @@ select = ["E", "F", "W"]
 [lint.per-file-ignores]
 # Notebooks Fabric : `spark`, `display`, `notebookutils` sont injectés par le runtime
 "fabric/**/notebook-content.py" = ["F821", "E402", "E501"]
+# Générateur TMDL : expressions DAX et descriptions gardées sur une ligne pour la lisibilité
+"powerbi/semantic-model/generate_tmdl.py" = ["E501"]

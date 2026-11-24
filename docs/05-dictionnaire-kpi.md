@@ -2,7 +2,8 @@
 
 Toutes les valeurs sont en **EUR**, converties au taux moyen du mois comptable.
 Convention : produits positifs, charges négatives ; un écart positif est **favorable**.
-Les formules DAX complètes sont dans [`powerbi/semantic-model/measures.dax`](../powerbi/semantic-model/measures.dax).
+Les formules DAX complètes (et ces définitions, en description de chaque mesure) sont dans le script
+[`powerbi/semantic-model/sm_finsight.tmdl`](../powerbi/semantic-model/sm_finsight.tmdl).
 
 ## Compte de résultat
 
@@ -29,7 +30,9 @@ Les formules DAX complètes sont dans [`powerbi/semantic-model/measures.dax`](..
 | **Écart budget %** | Écart / \|Budget\| |
 | **Taux de réalisation CA** | CA réel / CA budget |
 
-## Intelligence temporelle
+## Intelligence temporelle (groupe de calcul `Intelligence temporelle`, colonne `Période`)
+
+Applicable à toutes les mesures numériques ci-dessus.
 
 | KPI | Définition |
 |---|---|

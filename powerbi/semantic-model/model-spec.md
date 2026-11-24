@@ -23,6 +23,8 @@
 
 ## 2. Relations (toutes plusieurs-à-un, filtrage unidirectionnel)
 
+> Créées automatiquement par le script [`sm_finsight.tmdl`](sm_finsight.tmdl).
+
 | De (plusieurs) | Vers (un) | Active |
 |---|---|---|
 | `fact_gl[date_key]` | `dim_date[date_key]` | ✅ |
@@ -64,6 +66,7 @@ erDiagram
 
 | Action | Colonnes |
 |---|---|
+| **Décourager les mesures implicites** | Propriété du modèle → Activé (obligatoire pour le groupe de calcul) |
 | **Marquer comme table de dates** | `dim_date`, colonne `date` |
 | **Trier par colonne** | `dim_date[mois_nom]` par `mois` · `dim_date[mois_court]` par `mois` · `dim_date[annee_mois]` par `annee_mois_num` · `dim_date[jour_semaine]` par `jour_semaine_num` · `dim_compte[ligne_pnl]` par `ordre_pnl` · `fact_factures_clients[tranche_age]` et `fact_factures_fournisseurs[tranche_age]` par `tranche_age_ordre` |
 | **Masquer** | toutes les colonnes `*_key`, `debit`, `credit`, `montant_devise`, `montant_eur`, `montant_pnl_eur`, `budget_pnl_*`, `montant_*_eur`, `tranche_age_ordre`, `ordre_pnl`, `annee_mois_num`, `jour_semaine_num` (on expose des **mesures**, pas des colonnes numériques) |
@@ -71,19 +74,46 @@ erDiagram
 | **Catégorie de données** | `dim_entite[pays]`, `dim_client[pays]` → Pays/Région |
 | **Hiérarchies** | `dim_date` : Année → Trimestre → Mois → Date · `dim_compte` : Agrégat → Ligne P&L → Compte · `dim_centre_cout` : Département → Centre de coûts |
 
-## 4. Dossiers d'affichage des mesures
+## 4. Mesures, descriptions, dossiers et formats
+
+Tout est défini dans [`generate_tmdl.py`](generate_tmdl.py) (source unique) qui produit [`sm_finsight.tmdl`](sm_finsight.tmdl).
+Chaque mesure a une **description** (visible au survol dans le volet Données), un **dossier** et un **format**.
+Les mesures sont rangées dans leur table de faits (Direct Lake n'autorise pas de table de mesures calculée).
+
 
 | Dossier | Mesures |
 |---|---|
-| 1. Compte de résultat | Réel, CA, Coût des ventes, Marge brute, Charges externes, Charges de personnel, EBITDA, Résultat d'exploitation, Résultat net, %, Montant P&L |
+| 1. Compte de résultat | Réel, CA, Coût des ventes, Marge brute, Charges externes, Charges de personnel, EBITDA, Résultat d'exploitation, Résultat net, Montant P&L |
+| 1. Compte de résultat \\ Ratios | Marge brute %, EBITDA %, Résultat net %, Personnel % CA |
 | 2. Budget | Budget, CA Budget, EBITDA Budget, Résultat net Budget, Budget à date, Écart budget (à date), Écart budget %, Taux de réalisation CA, indicateur |
-| 3. Temps | YTD, N-1, Var N-1 %, 12 mois glissants |
+| 3. Temps | CA N-1 (raccourci pour les graphiques combinés) — le reste passe par le groupe de calcul |
 | 4. Créances clients | CA facturé TTC, Encours clients (échu), % Encours échu, DSO, Encours à l'arrêté, Nb factures ouvertes, Retard moyen, Encaissements clients |
 | 5. Dettes fournisseurs | Achats TTC, Encours fournisseurs, DPO, Décaissements fournisseurs |
 | 6. Trésorerie | Trésorerie, Variation, Entrées, Sorties, BFR clients - fournisseurs |
 | 9. Utilitaires | Date d'arrêté, Date de référence, Titre rapport, Libellé période |
 
-## 5. Bonnes pratiques Direct Lake appliquées
+## 5. Groupe de calcul « Intelligence temporelle »
+
+Plutôt que de dupliquer chaque mesure en YTD / N-1 / variation (≈ 40 mesures), un **groupe de calcul** applique
+la variante temporelle à **n'importe quelle mesure** : `[CA]`, `[EBITDA %]`, `[Écart budget à date]`, `[DSO (jours)]`…
+
+| Élément (colonne `Période`) | Calcul | Format |
+|---|---|---|
+| Période | valeur de la période filtrée (défaut) | format de la mesure |
+| YTD | `DATESYTD` | format de la mesure |
+| N-1 | `SAMEPERIODLASTYEAR` | format de la mesure |
+| YTD N-1 | `DATESYTD(SAMEPERIODLASTYEAR())` | format de la mesure |
+| Var N-1 | N − N-1 | format de la mesure |
+| Var N-1 % | (N − N-1) / \|N-1\| | `+0.0 %` (format dynamique) |
+| 12 mois glissants | `DATESINPERIOD(-12, MONTH)` | format de la mesure |
+
+**Utilisation dans le rapport**
+- Matrice : mettre `Intelligence temporelle[Période]` en colonnes et une ou plusieurs mesures en valeurs.
+- Carte KPI « CA YTD » : mesure `CA` + filtre du visuel `Période = YTD`.
+- Dans une autre mesure : `CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "N-1" )` (ex. `[CA N-1]`).
+- Les mesures texte / date (`Titre rapport`, `Date d'arrêté`…) sont protégées : le groupe les renvoie inchangées.
+
+## 6. Bonnes pratiques Direct Lake appliquées
 
 - Pas de colonnes calculées ni de tables calculées (non supportées / provoquent un fallback) : tout est calculé en Gold.
 - Clés entières, colonnes peu nombreuses, V-Order + `OPTIMIZE` sur les tables Gold.

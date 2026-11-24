@@ -39,3 +39,13 @@ Une entrée par session de travail : ce qui a été fait, décisions, problèmes
 - Tables renommées : `bronze_x` → `bronze.x`, `silver_x` → `silver.x`, `dim_*`/`fact_*`/`dq_resultats` → `gold.*`.
 - Chaque notebook crée son schéma (`CREATE SCHEMA IF NOT EXISTS`). Le Lakehouse doit être créé avec l'option « Lakehouse schemas ».
 - Modèle sémantique : uniquement le schéma `gold` ; noms de tables et mesures DAX inchangés.
+
+## 2026-11-24 — Modèle sémantique en TMDL + groupe de calcul
+
+- `measures.dax` remplacé par un **script TMDL** (`sm_finsight.tmdl`) qui crée relations, groupe de calcul et mesures
+  avec description, dossier et format, à appliquer depuis la vue TMDL.
+- Le script est **généré** par `generate_tmdl.py` (source unique) ; la CI vérifie qu'ils sont synchronisés.
+- **Groupe de calcul « Intelligence temporelle »** (YTD, N-1, YTD N-1, Var N-1, Var N-1 %, 12 mois glissants) :
+  remplace ~10 mesures temporelles dupliquées et s'applique à toutes les mesures.
+- Prérequis manuel : « Décourager les mesures implicites » sur le modèle.
+- Non vérifié automatiquement : l'application du TMDL dans Fabric (pas de moteur Analysis Services en CI).

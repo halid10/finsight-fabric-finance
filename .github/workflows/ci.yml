@@ -16,11 +16,15 @@ jobs:
         with:
           python-version: "3.11"
       - name: Lint (ruff)
-        run: pipx run ruff check data tests fabric --config ruff.toml
+        run: pipx run ruff check data tests fabric powerbi --config ruff.toml
       - name: Le jeu de données commité est à jour (génération reproductible)
         run: |
           python data/generator/generate_finance_data.py
           git diff --exit-code --stat data/raw
+      - name: Le script TMDL est synchronisé avec son générateur
+        run: |
+          python powerbi/semantic-model/generate_tmdl.py
+          git diff --exit-code --stat powerbi/semantic-model/sm_finsight.tmdl
       - name: Tests de cohérence des données
         run: python -m unittest discover -s tests -v
 
