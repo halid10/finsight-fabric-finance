@@ -236,9 +236,6 @@ RETURN DIVIDE ( [Encours fournisseurs], _achats90 ) * 90"""),
 }
 
 
-# Mesures qui utilisent le groupe de calcul : créées après lui
-MESURES_APRES_GROUPE = {"CA N-1"}
-
 # --------------------------------------------------------------------------------------
 # Rendu TMDL
 # --------------------------------------------------------------------------------------
@@ -267,8 +264,8 @@ def bloc_objet(entete: str, expr: str, niveau: int, proprietes: list, descriptio
 
 
 def generer() -> str:
-    """Ordre des blocs : chaque objet existe avant d'être référencé.
-    relations -> mesures -> groupe de calcul (cite des mesures) -> CA N-1 (cite le groupe de calcul)."""
+    """Un seul `createOrReplace` (la vue TMDL refuse les scripts à plusieurs commandes).
+    Tout est appliqué dans une même transaction : l'ordre des références n'importe pas."""
     L = ["createOrReplace", ""]
     for n, de, vers, active in RELATIONS:
         L += [f"{T}relationship {n}"]
@@ -276,18 +273,12 @@ def generer() -> str:
             L += [f"{T}{T}isActive: false"]
         L += [f"{T}{T}fromColumn: {de}", f"{T}{T}toColumn: {vers}", ""]
 
-    L += ["", "createOrReplace", ""]
     for table, mesures in MESURES.items():
         L += [f"{T}ref table {table}", ""]
         for n, dossier, fmt, desc, expr in mesures:
-            if n in MESURES_APRES_GROUPE:
-                continue
             L += rendu_mesure(n, dossier, fmt, desc, expr)
 
     L += [
-        "",
-        "createOrReplace",
-        "",
         f"{T}/// Variantes temporelles applicables à toutes les mesures numériques (YTD, N-1, variations, 12 mois glissants).",
         f"{T}table 'Intelligence temporelle'",
         "",
@@ -314,17 +305,7 @@ def generer() -> str:
         f"{T}{T}{T}sourceColumn: Ordinal",
         "",
         f"{T}{T}partition 'Intelligence temporelle' = calculationGroup",
-        "",
-        "",
-        "createOrReplace",
-        "",
     ]
-    for table, mesures in MESURES.items():
-        apres = [m for m in mesures if m[0] in MESURES_APRES_GROUPE]
-        if apres:
-            L += [f"{T}ref table {table}", ""]
-            for n, dossier, fmt, desc, expr in apres:
-                L += rendu_mesure(n, dossier, fmt, desc, expr)
     return "\n".join(L).rstrip() + "\n"
 
 

@@ -66,9 +66,6 @@ createOrReplace
 		fromColumn: fact_factures_fournisseurs.fournisseur_key
 		toColumn: dim_fournisseur.fournisseur_key
 
-
-createOrReplace
-
 	ref table fact_gl
 
 		/// Montant du compte de résultat en EUR : crédit − débit (produits positifs, charges négatives) sur les comptes filtrés.
@@ -140,6 +137,11 @@ createOrReplace
 		measure 'Personnel % CA' = DIVIDE ( - [Charges de personnel], [CA] )
 			formatString: 0.0 %
 			displayFolder: 1. Compte de résultat\Ratios
+
+		/// Chiffre d'affaires de la même période l'an dernier (raccourci du groupe de calcul, utile dans les graphiques combinés).
+		measure 'CA N-1' = CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "N-1" )
+			formatString: #,##0 €
+			displayFolder: 3. Temps
 
 		/// Solde du compte 512 (banque) à la date de référence. Mouvements convertis au taux moyen du mois.
 		measure 'Trésorerie' =
@@ -368,9 +370,6 @@ createOrReplace
 			formatString: #,##0 €
 			displayFolder: 5. Dettes fournisseurs
 
-
-createOrReplace
-
 	/// Variantes temporelles applicables à toutes les mesures numériques (YTD, N-1, variations, 12 mois glissants).
 	table 'Intelligence temporelle'
 
@@ -453,13 +452,3 @@ createOrReplace
 			sourceColumn: Ordinal
 
 		partition 'Intelligence temporelle' = calculationGroup
-
-
-createOrReplace
-
-	ref table fact_gl
-
-		/// Chiffre d'affaires de la même période l'an dernier (raccourci du groupe de calcul, utile dans les graphiques combinés).
-		measure 'CA N-1' = CALCULATE ( [CA], 'Intelligence temporelle'[Période] = "N-1" )
-			formatString: #,##0 €
-			displayFolder: 3. Temps

@@ -49,3 +49,5 @@ Une entrée par session de travail : ce qui a été fait, décisions, problèmes
   remplace ~10 mesures temporelles dupliquées et s'applique à toutes les mesures.
 - Prérequis manuel : « Décourager les mesures implicites » sur le modèle.
 - Non vérifié automatiquement : l'application du TMDL dans Fabric (pas de moteur Analysis Services en CI).
+- Correctif : la vue TMDL refuse les scripts à plusieurs commandes (« Applying a script with multiple commands is not supported »).
+  Le script est désormais un **seul `createOrReplace`** (relations + mesures + groupe de calcul, même transaction).
